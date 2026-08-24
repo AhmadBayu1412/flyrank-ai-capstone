@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahmad Bayu Samudera — Frontend Portfolio & FlyRank AI Capstone</title>
+  <meta name="description" content="Personal Developer Portfolio & FlyRank AI Capstone Showcase by Ahmad Bayu Samudera. Learning every day, building meaningful digital experiences." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Markdown Renderer for direct README viewing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="notion-dark">
+
+  <div class="app-layout">
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <!-- ================================================================= -->
+    <!-- GLOBAL APPLICATION SIDEBAR                                        -->
+    <!-- ================================================================= -->
+    <aside class="app-sidebar" id="global-sidebar">
+      
+      <!-- Sidebar Header (Clean User Identity) -->
+      <div class="sidebar-header">
+        <div class="sidebar-user-block" onclick="switchPageView('home')" title="Ahmad Bayu Samudera Workspace">
+          <img src="./assets/images/profile.png" alt="Ahmad Bayu Samudera" class="sidebar-avatar" onerror="this.src='./assets/images/cover-banner.svg'" />
+          <div class="sidebar-workspace-info">
+            <span class="sidebar-workspace-name">Ahmad Bayu S.</span>
+            <span class="sidebar-workspace-tag">Frontend & AI Engineer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Navigation Items -->
+      <div class="sidebar-scroll-content">
+        
+        <!-- Group 1: Main Portfolio Views (Clean & Unified) -->
+        <div class="sidebar-group">
+          <span class="sidebar-group-title">Navigation</span>
+          
+          <a class="sidebar-nav-item" data-view="home" onclick="switchPageView('home')">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Portfolio & Profile</span>
+          </a>
+
+          <a class="sidebar-nav-item" data-view="timeline" onclick="switchPageView('timeline')">
+            <span class="nav-icon">📈</span>
+            <span class="nav-text">Journey Timeline</span>
+          </a>
+
+          <a class="sidebar-nav-item" data-view="game" onclick="switchPageView('game')">
+            <span class="nav-icon">🎮</span>
+            <span class="nav-text">Dev Maze Game</span>
+          </a>
+
+          <a class="sidebar-nav-item" data-view="capstone" onclick="switchPageView('capstone')">
+            <span class="nav-icon">🚀</span>
+            <span class="nav-text">Capstone Gallery</span>
+            <span class="nav-badge-count">9</span>
+          </a>
+        </div>
+
+        <!-- Group 2: Project Workflows (Accordion Collapsible Categories) -->
+        <div class="sidebar-group" id="sidebar-workflows-group">
+          <div class="sidebar-group-header-row">
+            <span class="sidebar-group-title">Project Workflows</span>
+            <button class="sidebar-add-cat-btn admin-only" onclick="openCategoryCrudModal()" title="Add / Manage Categories" style="display: none;">➕</button>
+          </div>
+          <div id="sidebar-category-list" class="sidebar-category-list">
+            <!-- Dynamically rendered by app.js -->
+          </div>
+        </div>
+
+        <!-- Group 5: Documentation -->
+        <div class="sidebar-group">
+          <span class="sidebar-group-title">Workspace Docs</span>
+          
+          <a class="sidebar-nav-item" onclick="openMainReadme()" title="Open Master Repository Documentation">
+            <span class="nav-icon">📄</span>
+            <span class="nav-text">Master README.md</span>
+          </a>
+
+          <a class="sidebar-nav-item" onclick="openRetrospectiveModal()" title="Open Capstone Retrospective (FL-10)">
+            <span class="nav-icon">🧭</span>
+            <span class="nav-text">Retrospective.md</span>
+            <span class="nav-badge-sub">FL-10</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <button class="nav-btn connect-btn" style="width: 100%; justify-content: center;" onclick="openContactModal()">
+          <span>💬 Let's connect!</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ================================================================= -->
+    <!-- MAIN CONTENT VIEWPORT                                             -->
+    <!-- ================================================================= -->
+    <div class="app-main-viewport">
+      
+      <!-- Top Navigation Bar (Clean & No Duplications) -->
+      <header class="notion-nav" id="top-nav">
+        <div class="nav-left">
+          <button class="nav-icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2 3h12a1 1 0 010 2H2a1 1 0 010-2zm0 4h12a1 1 0 010 2H2a1 1 0 010-2zm0 4h12a1 1 0 010 2H2a1 1 0 010-2z"/>
+            </svg>
+          </button>
+          
+          <div class="notion-breadcrumb">
+            <span class="crumb-icon" onclick="switchPageView('home')" style="cursor: pointer;" title="Go to Home">📂</span>
+            <span class="crumb-text" onclick="switchPageView('home')" style="cursor: pointer;" title="Go to Home">Workspace</span>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-current" id="breadcrumb-current-view">Portfolio & Profile</span>
+          </div>
+
+          <span class="status-badge-private" onclick="openContactModal()" style="cursor: pointer;" title="Click to Connect / Hire">🚀 Available for Hire</span>
+        </div>
+
+        <div class="nav-right">
+          <button class="nav-btn" id="btn-admin-auth" onclick="handleAdminAuthClick()" title="Admin Authentication">
+            <span id="admin-btn-icon">🔒</span>
+            <span id="admin-btn-text">Admin Login</span>
+          </button>
+          <button class="nav-btn" id="btn-share" title="Copy Workspace Link">
+            <span>Share</span>
+          </button>
+          <a href="https://www.linkedin.com/in/ahmad-bayu-samudera-985880236/" target="_blank" rel="noopener noreferrer" class="nav-btn" title="LinkedIn Profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://github.com/AhmadBayu1412" target="_blank" rel="noopener noreferrer" class="nav-btn" title="GitHub Profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <button class="nav-icon-btn" id="btn-theme" title="Toggle Theme (Notion Dark / Light)">
+            🌙
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Stage Area -->
+      <div class="page-view-stage" id="main-scroll-stage">
+        
+        <!-- Cover Banner Header -->
+        <section class="notion-cover-wrapper">
+          <img src="./assets/images/cover-banner.svg" alt="Cover Banner" class="notion-cover-img" id="cover-image" />
+          <div class="cover-actions">
+            <button class="ghost-btn" id="btn-change-cover">🖼 Change cover</button>
+            <button class="ghost-btn" id="btn-reposition">↕ Reposition</button>
+          </div>
+        </section>
+
+        <!-- Dynamic View Content Wrapper (Only Selected View is Visible!) -->
+        <div class="page-content-wrapper">
+          
+          <!-- ============================================================= -->
+          <!-- UNIFIED VIEW 1: PORTFOLIO & PROFILE (Merged & Comprehensive) -->
+          <!-- ============================================================= -->
+          <div id="view-home" class="page-view-panel active">
+            
+            <!-- Hero Card Section -->
+            <section class="portfolio-hero-section">
+              <div class="hero-visual-card">
+                <div class="hero-avatar-wrap" onclick="openContactModal()" title="Click to Connect with Ahmad Bayu Samudera">
+                  <img src="./assets/images/profile.png" alt="Ahmad Bayu Samudera" class="hero-avatar-img" onerror="this.src='./assets/images/cover-banner.svg'" />
+                  <div class="avatar-badge">Frontend & AI Engineer</div>
+                </div>
+
+                <div class="hero-quote-box">
+                  <h1 class="hero-headline">
+                    Learning every day, building <span class="text-gradient">meaningful digital experiences</span>.
+                  </h1>
+                </div>
+              </div>
+
+              <div class="hero-narrative-card">
+                <div class="hero-narrative-header">
+                  <span class="hero-pill-badge">Engineering Focus</span>
+                  <div class="hero-meta-tags">
+                    <span class="meta-tag blue">Ahmad Bayu Samudera</span>
+                    <span class="meta-tag purple">9 Capstone Projects</span>
+                    <span class="meta-tag green">Production Ready</span>
+                    <span class="meta-tag amber">Architecture Records</span>
+                  </div>
+                </div>
+
+                <p class="hero-story-text">
+                  I believe software engineering is an iterative craft of continuous growth. Every line of code, architecture decision, and refactor is part of an ongoing journey to build reliable, high-performance systems.
+                </p>
+
+                <!-- 3 Principle Stat Cards -->
+                <div class="hero-principles-grid">
+                  <div class="principle-stat-card">
+                    <span class="principle-icon">🚀</span>
+                    <span class="principle-title">Autonomous & Full-Stack</span>
+                    <span class="principle-desc">Real-time telemetry, agentic LLM pipelines, and state machines.</span>
+                  </div>
+                  <div class="principle-stat-card">
+                    <span class="principle-icon">♿</span>
+                    <span class="principle-title">Accessibility & Speed</span>
+                    <span class="principle-desc">W3C ARIA APG standards with low-latency streaming.</span>
+                  </div>
+                  <div class="principle-stat-card">
+                    <span class="principle-icon">🏛</span>
+                    <span class="principle-title">System Architecture</span>
+                    <span class="principle-desc">Documented trade-offs and Architecture Decision Records (ADRs).</span>
+                  </div>
+                </div>
+                
+                <div class="hero-highlight-callout">
+                  <span class="callout-icon">💡</span>
+                  <div class="callout-text">
+                    <strong>Progress over perfection</strong> — continuous learning and solid fundamentals.
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="hero-action-row">
+                  <button class="btn-primary-action" onclick="switchPageView('capstone')">
+                    <span>🚀 Explore Capstone Database</span>
+                  </button>
+                  <button class="btn-secondary-action" onclick="switchPageView('timeline')">
+                    <span>📈 View Journey Timeline</span>
+                  </button>
+                  <button class="btn-secondary-action" onclick="switchPageView('game')">
+                    <span>🎮 Play Dev Maze</span>
+                  </button>
+                  <button class="btn-secondary-action" onclick="openContactModal()">
+                    <span>💬 Let's Connect</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Capstone Retrospective Spotlight Banner (FL-10 Final Milestone) -->
+            <section class="retrospective-spotlight-card" onclick="openRetrospectiveModal()" style="cursor: pointer;" title="Click to open full Retrospective.md">
+              <div class="retrospective-spotlight-inner">
+                <div class="retrospective-icon-glow">🧭</div>
+                <div class="retrospective-content-wrap">
+                  <div class="retrospective-tag-row">
+                    <span class="retrospective-badge">Assignment 8.2 • FL-10</span>
+                    <span class="retrospective-hours">⏱️ 196 Hours Logged</span>
+                  </div>
+                  <h3 class="retrospective-headline">Retrospective: From Prompter to AI Systems Builder</h3>
+                  <p class="retrospective-quote">
+                    "AI Fluency teaches you that work must be done iteratively, and that you need to create a design/ADR before building a real-world application. Don't expect an application to be built with just one magic prompt."
+                  </p>
+                </div>
+                <div class="retrospective-action-side">
+                  <button class="action-btn-primary" onclick="event.stopPropagation(); openRetrospectiveModal()">
+                    <span>📖 Read Retrospective →</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Profile & Technical Skill Matrix Bento Grid (Integrated directly) -->
+            <section class="profile-bento-grid">
+              <div class="profile-card-box">
+                <h3 class="box-heading">👤 Developer Credentials & Info</h3>
+                <p style="font-size: 13px; color: var(--text-main); line-height: 1.6;">
+                  Passionate about bridging complex backend/AI capabilities with intuitive, accessible, and ultra-fast user experiences. Experienced in Next.js, React 19, TypeScript, GLSL WebGL shaders, Redis distributed synchronization, and automated AI workflows.
+                </p>
+                <div class="profile-details-list">
+                  <div class="detail-item">
+                    <span class="detail-label">🎓 Track</span>
+                    <span class="detail-val">FlyRank AI Capstone & Frontend Engineering</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">🌐 GitHub</span>
+                    <a href="https://github.com/AhmadBayu1412" target="_blank" rel="noopener noreferrer" class="detail-link">github.com/AhmadBayu1412 ↗</a>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">💼 LinkedIn</span>
+                    <a href="https://www.linkedin.com/in/ahmad-bayu-samudera-985880236/" target="_blank" rel="noopener noreferrer" class="detail-link">linkedin.com/in/ahmad-bayu-samudera ↗</a>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">🏆 Dicoding</span>
+                    <a href="https://www.dicoding.com/users/ahmadbayusamudera" target="_blank" rel="noopener noreferrer" class="detail-link">dicoding.com/users/ahmadbayusamudera ↗</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="skills-card-box">
+                <h3 class="box-heading">🛠 Technical Skill Matrix</h3>
+                
+                <div class="skill-category-block">
+                  <span class="skill-cat-label">Frontend & WebGL</span>
+                  <div class="skill-pill-wrap">
+                    <span class="skill-chip">React 19</span>
+                    <span class="skill-chip">Next.js 16</span>
+                    <span class="skill-chip">TypeScript</span>
+                    <span class="skill-chip">Three.js</span>
+                    <span class="skill-chip">GLSL Shaders</span>
+                    <span class="skill-chip">Tailwind CSS v4</span>
+                    <span class="skill-chip">W3C ARIA APG</span>
+                  </div>
+                </div>
+
+                <div class="skill-category-block">
+                  <span class="skill-cat-label">Backend & Systems</span>
+                  <div class="skill-pill-wrap">
+                    <span class="skill-chip">PostgreSQL</span>
+                    <span class="skill-chip">Prisma ORM</span>
+                    <span class="skill-chip">Redis Locks</span>
+                    <span class="skill-chip">Express.js</span>
+                    <span class="skill-chip">Zustand</span>
+                    <span class="skill-chip">Firebase</span>
+                  </div>
+                </div>
+
+                <div class="skill-category-block">
+                  <span class="skill-cat-label">AI & Autonomous Agents</span>
+                  <div class="skill-pill-wrap">
+                    <span class="skill-chip">Vercel AI SDK</span>
+                    <span class="skill-chip">n8n Agents</span>
+                    <span class="skill-chip">Groq LLM</span>
+                    <span class="skill-chip">Google Gemini API</span>
+                    <span class="skill-chip">SSE Streaming</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Featured Capstone Showcase Preview (Scrollable 2-3 Rows Grid) -->
+            <section class="featured-showcase-section">
+              <div class="featured-header-row">
+                <h2 class="featured-title">✨ Featured Flagship Projects</h2>
+                <button class="ghost-btn" onclick="switchPageView('capstone')">Explore Full Database →</button>
+              </div>
+
+              <div class="featured-cards-grid">
+                <!-- Project 1: Nexus AI -->
+                <article class="notion-card" onclick="openProjectModal('nexus-ai')">
+                  <div class="card-cover">
+                    <img src="./assets/images/nexus-ai.png" alt="Nexus AI Preview" />
+                    <span class="card-badge-overlay">AI & Agents</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">🤖</span>
+                      <h3 class="card-title">Nexus AI</h3>
+                    </div>
+                    <p class="card-excerpt">Enterprise streaming chatbot with token abuse shields, real-time web verification, and sub-50ms TTFT.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag ai">Next.js 16</span>
+                      <span class="pill-tag ai">Vercel AI SDK</span>
+                      <span class="pill-tag ai">SSE Streaming</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://nexus-ai-chatbot-opal.vercel.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/nexus-ai" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 2: SEISMIC FIELD -->
+                <article class="notion-card" onclick="openProjectModal('seismic-field')">
+                  <div class="card-cover">
+                    <img src="./assets/images/seismic-field.png" alt="SEISMIC FIELD Preview" />
+                    <span class="card-badge-overlay">Real-Time & Telemetry</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">🌐</span>
+                      <h3 class="card-title">SEISMIC FIELD</h3>
+                    </div>
+                    <p class="card-excerpt">Live earthquake observatory with BMKG telemetry, 3D crust cross-sections & GLSL seismic wave shaders.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag fullstack">MapLibre GL</span>
+                      <span class="pill-tag fullstack">GLSL Shaders</span>
+                      <span class="pill-tag fullstack">BMKG API</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://seismic-field.vercel.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/seismic-field" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 3: Pasaria E-Commerce -->
+                <article class="notion-card" onclick="openProjectModal('pasaria')">
+                  <div class="card-cover">
+                    <img src="./assets/images/pasaria.png" alt="Pasaria Preview" />
+                    <span class="card-badge-overlay">Real-Time & Full-Stack</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">🛒</span>
+                      <h3 class="card-title">Pasaria E-Commerce</h3>
+                    </div>
+                    <p class="card-excerpt">Modular monolith with Redis distributed locks for flash sale inventory reservation & order state machine.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag fullstack">PostgreSQL</span>
+                      <span class="pill-tag fullstack">Redis Locks</span>
+                      <span class="pill-tag fullstack">Prisma ORM</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://pasaria-e-commerce.vercel.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/Pasaria-E-Commerce" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 4: CVPilot -->
+                <article class="notion-card" onclick="openProjectModal('cvpilot')">
+                  <div class="card-cover">
+                    <img src="./assets/images/cvpilot.png" alt="CVPilot Preview" />
+                    <span class="card-badge-overlay">AI & Agents</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">📄</span>
+                      <h3 class="card-title">CVPilot ATS Analyzer</h3>
+                    </div>
+                    <p class="card-excerpt">AI-Powered Resume Analyzer with ATS score calculation, keyword match optimizer, and STAR section rewrites.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag ai">React 19</span>
+                      <span class="pill-tag ai">Three.js</span>
+                      <span class="pill-tag ai">Gemini API</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://cv-ai-resume-analyzer.netlify.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/ai-resume-analyzer" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 5: DeadSubs -->
+                <article class="notion-card" onclick="openProjectModal('deadsubs')">
+                  <div class="card-cover">
+                    <img src="./assets/images/deadsubs.png" alt="DeadSubs Preview" />
+                    <span class="card-badge-overlay">Real-Time & Full-Stack</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">💳</span>
+                      <h3 class="card-title">DeadSubs Burn Killer</h3>
+                    </div>
+                    <p class="card-excerpt">Financial wellness tool with subscription burn rate tracking, auto-renewal alerts, & cancellation playbooks.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag fullstack">React 19</span>
+                      <span class="pill-tag fullstack">Zustand 5</span>
+                      <span class="pill-tag fullstack">Dexie.js</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://deadsubs.netlify.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/deadsubs" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 6: ADR Portfolio -->
+                <article class="notion-card" onclick="openProjectModal('portfolio-adr')">
+                  <div class="card-cover">
+                    <img src="./assets/images/portfolio-adr.png" alt="ADR Portfolio Preview" />
+                    <span class="card-badge-overlay">Architecture & UI/UX</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">🏛</span>
+                      <h3 class="card-title">ADR Portfolio</h3>
+                    </div>
+                    <p class="card-excerpt">Technical case study portfolio structured around Architecture Decision Records (ADR 001 - 005) & 3D Three.js mascot.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag frontend">Next.js 16</span>
+                      <span class="pill-tag frontend">Three.js</span>
+                      <span class="pill-tag frontend">ADR System</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://ahmad-bayu-samudera.netlify.app/" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/portfolio" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 7: NusantaraBrief AI -->
+                <article class="notion-card" onclick="openProjectModal('nusantarabrief')">
+                  <div class="card-cover">
+                    <img src="./assets/images/nusantarabrief.png" alt="NusantaraBrief Preview" />
+                    <span class="card-badge-overlay">AI & Agents</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">📰</span>
+                      <h3 class="card-title">NusantaraBrief AI</h3>
+                    </div>
+                    <p class="card-excerpt">Autonomous n8n agent parsing national RSS feeds and generating Groq LLM-synthesized email briefs.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag ai">n8n Workflow</span>
+                      <span class="pill-tag ai">Groq LLM</span>
+                      <span class="pill-tag ai">RSS Agent</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://github.com/AhmadBayu1412/flyrank-ai-capstone" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Workflow</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/flyrank-ai-capstone" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 8: LearnHub -->
+                <article class="notion-card" onclick="openProjectModal('learnhub')">
+                  <div class="card-cover">
+                    <img src="./assets/images/learnhub.png" alt="LearnHub Preview" />
+                    <span class="card-badge-overlay">Architecture & UI/UX</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">♿</span>
+                      <h3 class="card-title">LearnHub Masterclass</h3>
+                    </div>
+                    <p class="card-excerpt">W3C ARIA APG benchmark showcase comparing native accessible components with shadcn/ui & Radix UI.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag frontend">React</span>
+                      <span class="pill-tag frontend">Radix UI</span>
+                      <span class="pill-tag frontend">WCAG 2.1 AA</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://github.com/AhmadBayu1412/LearnHub" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/LearnHub" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Project 9: MovieSearch / MovieMate -->
+                <article class="notion-card" onclick="openProjectModal('moviesearch')">
+                  <div class="card-cover">
+                    <img src="./assets/images/moviesearch.png" alt="MovieSearch Preview" />
+                    <span class="card-badge-overlay">Architecture & UI/UX</span>
+                  </div>
+                  <div class="card-content">
+                    <div class="card-header-row">
+                      <span class="card-icon">🎬</span>
+                      <h3 class="card-title">MovieSearch / MovieMate</h3>
+                    </div>
+                    <p class="card-excerpt">Movie discovery app with OMDb real-time search debounce and Firebase Cloud Firestore favourites sync.</p>
+                    <div class="card-tags-row">
+                      <span class="pill-tag frontend">React 19</span>
+                      <span class="pill-tag frontend">Firebase Auth</span>
+                      <span class="pill-tag frontend">Firestore</span>
+                    </div>
+                    <div class="card-footer-actions" onclick="event.stopPropagation()">
+                      <a href="https://github.com/AhmadBayu1412/MovieMate" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+                        <span>Live Demo</span> ↗
+                      </a>
+                      <a href="https://github.com/AhmadBayu1412/MovieMate" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+                        <span>GitHub</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- VIEW 2: DEVELOPER TIMELINE                                   -->
+          <!-- ============================================================= -->
+          <div id="view-timeline" class="page-view-panel">
+            <div class="section-title-wrap">
+              <div class="section-badge">📈 Milestones</div>
+              <h2 class="section-title"><span class="highlight-underline">Timeline</span> — My Developer Journey</h2>
+              <p class="section-subtitle">
+                It hasn't been a smooth journey, but every step has taught me something. These are real milestones in my learning process as a software engineer.
+              </p>
+            </div>
+
+            <div class="timeline-tree">
+              <!-- Item 1 -->
+              <div class="timeline-node">
+                <div class="node-marker">1</div>
+                <div class="node-card">
+                  <div class="node-header">
+                    <span class="node-tag">Fundamentals</span>
+                    <span class="node-time">Phase 1</span>
+                  </div>
+                  <h3 class="node-title">Discovering the Web World</h3>
+                  <p class="node-desc">
+                    My first time writing HTML & CSS — and falling in love when I saw the results appear in the browser. Mastered semantic layouts, CSS flexbox/grid, animations, and mobile responsiveness.
+                  </p>
+                  <div class="node-tech-tags">
+                    <span class="pill-tag frontend">HTML5</span>
+                    <span class="pill-tag frontend">CSS3</span>
+                    <span class="pill-tag frontend">Responsive Design</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="timeline-node">
+                <div class="node-marker">2</div>
+                <div class="node-card">
+                  <div class="node-header">
+                    <span class="node-tag">Logic & DOM</span>
+                    <span class="node-time">Phase 2</span>
+                  </div>
+                  <h3 class="node-title">Learning to Think Logically</h3>
+                  <p class="node-desc">
+                    JavaScript taught me that errors are not the end — they are just the beginning of deeper understanding. Built interactive web applications, event systems, asynchronous API fetching, and clean error boundaries.
+                  </p>
+                  <div class="node-tech-tags">
+                    <span class="pill-tag frontend">JavaScript ES6+</span>
+                    <span class="pill-tag frontend">DOM Manipulation</span>
+                    <span class="pill-tag frontend">Async/Await & Fetch</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="timeline-node">
+                <div class="node-marker">3</div>
+                <div class="node-card">
+                  <div class="node-header">
+                    <span class="node-tag">Component Architecture</span>
+                    <span class="node-time">Phase 3</span>
+                  </div>
+                  <h3 class="node-title">Building Component-Driven SPAs</h3>
+                  <p class="node-desc">
+                    Transitioned to React 19, TypeScript strict mode, and modern toolchains. Focused on declarative UI, custom hook state isolation, Zustand stores, accessible ARIA primitives, and Tailwind CSS.
+                  </p>
+                  <div class="node-tech-tags">
+                    <span class="pill-tag frontend">React 19</span>
+                    <span class="pill-tag frontend">TypeScript</span>
+                    <span class="pill-tag frontend">Radix UI / shadcn</span>
+                    <span class="pill-tag frontend">Vite</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="timeline-node">
+                <div class="node-marker">4</div>
+                <div class="node-card">
+                  <div class="node-header">
+                    <span class="node-tag">Full-Stack & Systems</span>
+                    <span class="node-time">Phase 4</span>
+                  </div>
+                  <h3 class="node-title">Full-Stack Platforms & State Machines</h3>
+                  <p class="node-desc">
+                    Engineered complex full-stack backends with Next.js App Router, Express, PostgreSQL, Prisma ORM, and Redis distributed locks to resolve race conditions and enforce strict order state machines.
+                  </p>
+                  <div class="node-tech-tags">
+                    <span class="pill-tag fullstack">Next.js 16</span>
+                    <span class="pill-tag fullstack">PostgreSQL</span>
+                    <span class="pill-tag fullstack">Redis Locks</span>
+                    <span class="pill-tag fullstack">Prisma</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 5 -->
+              <div class="timeline-node">
+                <div class="node-marker">5</div>
+                <div class="node-card highlight-node">
+                  <div class="node-header">
+                    <span class="node-tag ai">Internship Capstone</span>
+                    <span class="node-time">Present</span>
+                  </div>
+                  <h3 class="node-title">FlyRank AI Capstone & Autonomous Agents</h3>
+                  <p class="node-desc">
+                    Developed 9 production-grade capstone projects spanning real-time SSE streaming LLM platforms (Nexus AI), BMKG geospatial telemetry with GLSL shaders (SEISMIC FIELD), and autonomous n8n news agents (NusantaraBrief).
+                  </p>
+                  <div class="node-tech-tags">
+                    <span class="pill-tag ai">Agentic AI & Groq</span>
+                    <span class="pill-tag fullstack">GLSL Shaders</span>
+                    <span class="pill-tag ai">n8n Automation</span>
+                    <span class="pill-tag frontend">ADR Architecture</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- VIEW 3: DEV MAZE MINI GAME                                   -->
+          <!-- ============================================================= -->
+          <div id="view-game" class="page-view-panel">
+            <div class="section-title-wrap">
+              <div class="section-badge">🎮 Mini Game</div>
+              <h2 class="section-title"><span class="highlight-underline">Dev Maze</span> — Collect Skills & Reach Capstone</h2>
+              <p class="section-subtitle">
+                A fun interactive maze challenge built directly in JavaScript & Canvas — because breaks and gamified learning matter! Use your keyboard arrow keys, WASD, or the on-screen buttons below.
+              </p>
+            </div>
+
+            <div class="game-container-card">
+              <div class="game-top-bar">
+                <div class="game-stat">
+                  <span class="stat-icon">💎</span>
+                  <span class="stat-text">Skills Collected: <strong id="game-score">0 / 5</strong></span>
+                </div>
+                <div class="game-stat">
+                  <span class="stat-icon">⏱</span>
+                  <span class="stat-text">Moves: <strong id="game-moves">0</strong></span>
+                </div>
+                <button class="ghost-btn" id="game-reset-btn" onclick="initDevMazeGame()">🔄 Reset Maze</button>
+              </div>
+
+              <div class="game-canvas-wrap">
+                <canvas id="dev-maze-canvas" width="600" height="380"></canvas>
+                <div class="game-win-overlay" id="game-win-screen" style="display: none;">
+                  <div class="win-card">
+                    <div class="win-icon">🎉</div>
+                    <h3>Capstone Unlocked!</h3>
+                    <p>Congratulations! You gathered all skills and completed the developer journey.</p>
+                    <button class="btn-primary-action" onclick="switchPageView('capstone')">🚀 Explore Capstone Projects</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- On-screen D-Pad Controls -->
+              <div class="game-dpad-controls">
+                <button class="dpad-btn up" onclick="handleGameDirection('up')" aria-label="Move Up">▲</button>
+                <div class="dpad-row">
+                  <button class="dpad-btn left" onclick="handleGameDirection('left')" aria-label="Move Left">◀</button>
+                  <button class="dpad-btn down" onclick="handleGameDirection('down')" aria-label="Move Down">▼</button>
+                  <button class="dpad-btn right" onclick="handleGameDirection('right')" aria-label="Move Right">▶</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================= -->
+          <!-- VIEW 4: CAPSTONE DATABASE & GALLERY                          -->
+          <!-- ============================================================= -->
+          <div id="view-capstone" class="page-view-panel">
+            
+            <div class="database-header-wrap">
+              <div class="notion-icon-box">🎓</div>
+              <h2 class="notion-title">FlyRank AI Capstone Database</h2>
+              
+              <div class="notion-callout">
+                <span class="callout-icon">💡</span>
+                <div class="callout-content">
+                  <p><strong>Showcase 9 Capstone Projects:</strong> Klik pada kartu proyek mana saja untuk membuka ringkasan teknikal dan membaca dokumen <strong>README.md</strong> lengkap masing-masing repositori.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Database Toolbar -->
+            <div class="database-toolbar">
+              <div class="toolbar-left">
+                <div class="view-tabs">
+                  <button class="view-tab active" id="view-gallery-btn" onclick="setViewMode('gallery')">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm0 8A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8-8A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zm0 8A1.5 1.5 0 0110.5 9h3a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 019 13.5v-3z"/></svg>
+                    <span>Gallery</span>
+                  </button>
+                  <button class="view-tab" id="view-list-btn" onclick="setViewMode('list')">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 12a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0-5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0-5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM6 2.5A.5.5 0 016.5 2h8a.5.5 0 010 1h-8A.5.5 0 016 2.5zm0 5.5a.5.5 0 01.5-.5h8a.5.5 0 010 1h-8a.5.5 0 01-.5-.5zm0 5.5a.5.5 0 01.5-.5h8a.5.5 0 010 1h-8a.5.5 0 01-.5-.5z"/></svg>
+                    <span>List</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="toolbar-right">
+                <!-- Search input -->
+                <div class="notion-search-box">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"/></svg>
+                  <input type="text" id="project-search" placeholder="Search projects, stack, keywords..." oninput="handleSearch(this.value)" />
+                </div>
+
+                <!-- Filter Dropdown -->
+                <div class="filter-dropdown-container">
+                  <select id="category-filter-select" onchange="filterProjects(this.value)" class="notion-select">
+                    <option value="all">📁 All Categories</option>
+                    <option value="ai">🤖 AI & Autonomous Agents</option>
+                    <option value="fullstack">🌐 Real-Time & Full-Stack</option>
+                    <option value="frontend">🎨 Architecture & UI/UX</option>
+                  </select>
+                </div>
+
+                <!-- Admin Action Buttons -->
+                <button class="notion-new-btn admin-only" id="btn-add-project" onclick="openProjectCrudModal()" title="Add New Project" style="display: none;">
+                  <span>➕ Add Project</span>
+                </button>
+                <button class="nav-btn admin-only" id="btn-add-category" onclick="openCategoryCrudModal()" title="Add / Manage Categories" style="display: none;">
+                  <span>🏷️ Manage Categories</span>
+                </button>
+                <button class="nav-btn admin-only" id="btn-reset-db" onclick="resetDatabaseToDefault()" title="Reset database to default flagship projects" style="display: none;">
+                  <span>🔄 Reset DB</span>
+                </button>
+
+                <!-- Explore button -->
+                <button class="notion-new-btn" onclick="openRandomProject()" title="Explore random showcase project">
+                  <span>⚡ Explore</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Gallery Cards Grid Container -->
+            <div class="notion-gallery-grid" id="projects-grid">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="notion-empty-state" id="empty-state" style="display: none;">
+              <div class="empty-icon">🔍</div>
+              <h3>No projects match your search</h3>
+              <p>Coba gunakan kata kunci lain seperti <code>AI</code>, <code>Next.js</code>, <code>GLSL</code>, atau <code>PostgreSQL</code>.</p>
+              <button class="ghost-btn" onclick="resetFilters()">Reset Filter</button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- PROJECT README / DETAIL MODAL                                     -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="project-modal" onclick="handleBackdropClick(event)">
+    <div class="notion-modal-container" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeModal()" title="Close (Esc)">✕</button>
+      
+      <!-- Modal Banner Cover -->
+      <div class="modal-cover-wrap">
+        <img src="" alt="Modal Banner" id="modal-cover-img" />
+      </div>
+
+      <!-- Modal Content Body -->
+      <div class="modal-body-content">
+        <div class="modal-icon-badge" id="modal-icon">🤖</div>
+        <h2 class="modal-title" id="modal-title">Project Title</h2>
+        <p class="modal-subtitle" id="modal-subtitle">Project short subtitle</p>
+
+        <!-- Properties Table -->
+        <div class="notion-properties-table">
+          <div class="property-row">
+            <span class="prop-name"><span class="prop-icon">🏷</span> Category</span>
+            <span class="prop-value" id="modal-prop-category"><span class="pill-tag">AI Agent</span></span>
+          </div>
+          <div class="property-row">
+            <span class="prop-name"><span class="prop-icon">🛠</span> Tech Stack</span>
+            <div class="prop-tags-wrap" id="modal-prop-stack"></div>
+          </div>
+          <div class="property-row">
+            <span class="prop-name"><span class="prop-icon">📦</span> GitHub</span>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="prop-link" id="modal-prop-repo">Open GitHub Repository ↗</a>
+          </div>
+          <div class="property-row">
+            <span class="prop-name"><span class="prop-icon">🌐</span> Live Demo</span>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="prop-link highlight" id="modal-prop-demo">Open Live Deployment ↗</a>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="modal-doc-tabs">
+          <button class="doc-tab active" id="tab-readme-btn" onclick="switchModalTab('readme')">📖 Full Project README.md</button>
+          <button class="doc-tab" id="tab-specs-btn" onclick="switchModalTab('specs')">⚡ Quick Highlights & Specs</button>
+        </div>
+
+        <!-- Rendered Full README Markdown Container -->
+        <div class="modal-readme-view" id="modal-readme-container">
+          <div class="readme-loading" id="readme-loading">Memuat dokumen README...</div>
+          <div class="markdown-rendered-body" id="modal-readme-rendered"></div>
+        </div>
+
+        <!-- Quick Specs View -->
+        <div class="modal-specs-view" id="modal-specs-container" style="display: none;">
+          <div class="modal-markdown-article">
+            <h3>📌 Overview & Problem Statement</h3>
+            <p id="modal-desc-full"></p>
+
+            <h3>⚡ Key Engineering Highlights</h3>
+            <ul id="modal-highlights-list"></ul>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="modal-action-buttons">
+          <a href="#" target="_blank" rel="noopener noreferrer" id="modal-btn-github" class="action-btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span>Open GitHub Repository</span>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" id="modal-btn-live" class="action-btn-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            <span>Launch Live Demo</span>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- CONTACT MODAL                                                     -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="contact-modal" onclick="handleContactBackdropClick(event)">
+    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeContactModal()" title="Close (Esc)">✕</button>
+      
+      <div class="modal-body-content contact-modal-body">
+        <div class="modal-icon-badge">💬</div>
+        <h2 class="modal-title">Let's Connect & Collaborate</h2>
+        <p class="modal-subtitle">Feel free to reach out for engineering roles, project inquiries, or technical discussion!</p>
+
+        <div class="contact-links-grid">
+          <a href="https://github.com/AhmadBayu1412" target="_blank" rel="noopener noreferrer" class="contact-card-btn">
+            <span class="card-btn-icon">📦</span>
+            <div>
+              <strong>GitHub</strong>
+              <span>@AhmadBayu1412</span>
+            </div>
+          </a>
+          <a href="https://www.linkedin.com/in/ahmad-bayu-samudera-985880236/" target="_blank" rel="noopener noreferrer" class="contact-card-btn">
+            <span class="card-btn-icon">💼</span>
+            <div>
+              <strong>LinkedIn</strong>
+              <span>Ahmad Bayu Samudera</span>
+            </div>
+          </a>
+          <a href="https://www.dicoding.com/users/ahmadbayusamudera" target="_blank" rel="noopener noreferrer" class="contact-card-btn">
+            <span class="card-btn-icon">🏆</span>
+            <div>
+              <strong>Dicoding Profile</strong>
+              <span>ahmadbayusamudera</span>
+            </div>
+          </a>
+          <div class="contact-card-btn" onclick="copyEmailToClipboard()" style="cursor: pointer;">
+            <span class="card-btn-icon">📧</span>
+            <div>
+              <strong>Email Address</strong>
+              <span id="contact-email-text">Click to copy email</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- ADMIN AUTHENTICATION MODAL (2FA / EMAIL VERIFICATION)              -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="admin-auth-modal" onclick="handleAuthBackdropClick(event)">
+    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeAdminAuthModal()" title="Close (Esc)">✕</button>
+      
+      <div class="modal-body-content contact-modal-body">
+        <div class="modal-icon-badge" id="auth-modal-icon">🛡️</div>
+        
+        <!-- Step 1: Login Form (Email & Password) -->
+        <div id="auth-step-login">
+          <h2 class="modal-title">Admin Authentication</h2>
+          <p class="modal-subtitle">Enter administrator credentials to unlock full CRUD editing capabilities.</p>
+
+          <form class="crud-form" onsubmit="handleAdminLoginSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="auth-email">Administrator Email</label>
+              <input type="email" id="auth-email" class="form-input" placeholder="ahmadbayusamudera01@gmail.com" required autocomplete="email" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="auth-password">Password</label>
+              <input type="password" id="auth-password" class="form-input" placeholder="••••••••••••" required autocomplete="current-password" />
+            </div>
+
+            <div id="auth-error-msg" style="display: none; font-size: 12px; color: var(--destructive); margin-top: 4px;"></div>
+
+            <div class="modal-action-buttons" style="margin-top: 14px; padding-top: 10px;">
+              <button type="submit" class="action-btn-primary" style="width: 100%; justify-content: center;">
+                <span>Send 2FA Security Code →</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 2: 2FA OTP Code Verification -->
+        <div id="auth-step-otp" style="display: none;">
+          <h2 class="modal-title">2-Factor Authentication</h2>
+          <p class="modal-subtitle">Security code dispatched to <strong id="auth-target-email-display">authorized administrator</strong>.</p>
+
+          <!-- Simulated Email Dispatch Notice -->
+          <div class="email-sim-dispatch-box" id="email-dispatch-sim-box">
+            <div class="email-sim-header">
+              <span>📧 Security Notification</span>
+              <span style="font-size: 11px; opacity: 0.8;">Just now</span>
+            </div>
+            <p style="font-size: 12px; color: var(--foreground); line-height: 1.4;">
+              Your 6-digit authentication OTP for FlyRank Admin Mode is:
+            </p>
+            <div class="email-sim-otp-code" id="sim-otp-display">------</div>
+            <p style="font-size: 11px; color: var(--muted-foreground);">
+              Enter this verification code below to authorize CRUD access.
+            </p>
+          </div>
+
+          <form class="crud-form" onsubmit="handleOtpVerificationSubmit(event)" style="margin-top: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="auth-otp-input">6-Digit Verification Code</label>
+              <input type="text" id="auth-otp-input" class="form-input otp-input-field" maxlength="6" placeholder="••••••" required autocomplete="one-time-code" />
+            </div>
+
+            <div id="otp-error-msg" style="display: none; font-size: 12px; color: var(--destructive); margin-top: 4px;"></div>
+
+            <div class="modal-action-buttons" style="margin-top: 14px; padding-top: 10px;">
+              <button type="submit" class="action-btn-primary" style="width: 100%; justify-content: center;">
+                <span>Verify & Enter Admin Mode 🛡️</span>
+              </button>
+              <button type="button" class="action-btn-secondary" onclick="resendOtpCode()" style="width: 100%; justify-content: center; margin-top: 6px;">
+                <span>🔄 Resend Verification Code</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- PROJECT CRUD FORM MODAL (CREATE & UPDATE)                         -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="project-crud-modal" onclick="handleCrudBackdropClick(event)">
+    <div class="notion-modal-container" style="max-width: 680px;" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeProjectCrudModal()" title="Close (Esc)">✕</button>
+      
+      <div class="modal-body-content">
+        <div class="modal-icon-badge" id="crud-modal-badge">✨</div>
+        <h2 class="modal-title" id="crud-modal-title">Create / Edit Project</h2>
+        <p class="modal-subtitle" id="crud-modal-desc">Add a new capstone work or update existing project metadata.</p>
+
+        <form class="crud-form" id="project-edit-form" onsubmit="handleSaveProjectSubmit(event)">
+          <input type="hidden" id="crud-project-id" value="" />
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="crud-title">Project Title *</label>
+              <input type="text" id="crud-title" class="form-input" placeholder="e.g. Nexus AI Chatbot" required />
+            </div>
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="crud-category">Category *</label>
+                <button type="button" class="form-link-btn" onclick="openCategoryCrudModal()" title="Create new category">+ Add Category</button>
+              </div>
+              <select id="crud-category" class="form-select" required>
+                <!-- Populated dynamically by app.js -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="crud-icon">Icon Emoji</label>
+              <input type="text" id="crud-icon" class="form-input" placeholder="🤖" value="🚀" maxlength="4" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="crud-subtitle">Short Subtitle</label>
+              <input type="text" id="crud-subtitle" class="form-input" placeholder="e.g. Enterprise Streaming LLM Chatbot" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-cover">Cover Image URL / Path</label>
+            <input type="text" id="crud-cover" class="form-input" placeholder="./assets/images/cover-banner.svg" value="./assets/images/cover-banner.svg" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="crud-live">Live Demo URL</label>
+              <input type="url" id="crud-live" class="form-input" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="crud-github">GitHub Repo URL</label>
+              <input type="url" id="crud-github" class="form-input" placeholder="https://github.com/..." />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-tags">Tech Stack Tags (Comma separated)</label>
+            <input type="text" id="crud-tags" class="form-input" placeholder="Next.js 16, TypeScript, Redis" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-excerpt">Card Short Excerpt</label>
+            <textarea id="crud-excerpt" class="form-textarea" placeholder="Short 1-2 sentence description shown on project cards..." rows="2"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-overview">Full Technical Overview / Notes</label>
+            <textarea id="crud-overview" class="form-textarea" placeholder="Detailed architectural description, trade-offs, benchmarks..." rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-readme-path">README File Path (Optional, e.g. ./docs/readmes/my-project.md)</label>
+            <input type="text" id="crud-readme-path" class="form-input" placeholder="./docs/readmes/..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="crud-readme-content">Custom README Markdown Content (Optional / Direct Editor)</label>
+            <textarea id="crud-readme-content" class="form-textarea" placeholder="# Project Documentation&#10;&#10;Write full markdown here (headings, code blocks, lists)..." rows="6" style="font-family: var(--font-mono); font-size: 12px;"></textarea>
+          </div>
+
+          <div class="modal-action-buttons">
+            <button type="submit" class="action-btn-primary">
+              <span>💾 Save Project</span>
+            </button>
+            <button type="button" class="action-btn-secondary" onclick="closeProjectCrudModal()">
+              <span>Cancel</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- CATEGORY MANAGEMENT & CREATION MODAL                             -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="category-crud-modal" onclick="handleCategoryBackdropClick(event)">
+    <div class="notion-modal-container" style="max-width: 580px;" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeCategoryCrudModal()" title="Close (Esc)">✕</button>
+      
+      <div class="modal-body-content">
+        <div class="modal-icon-badge" id="category-modal-badge">🏷️</div>
+        <h2 class="modal-title">Category Management</h2>
+        <p class="modal-subtitle">Add new project workflows or manage existing classification categories.</p>
+
+        <!-- Add Category Form -->
+        <form class="crud-form" id="category-edit-form" onsubmit="handleSaveCategorySubmit(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="cat-name-input">Category Name *</label>
+              <input type="text" id="cat-name-input" class="form-input" placeholder="e.g. Cloud & DevOps" required oninput="handleCategoryNameInput(this.value)" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cat-slug-input">Category ID / Slug *</label>
+              <input type="text" id="cat-slug-input" class="form-input" placeholder="e.g. devops" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cat-icon-input">Icon Emoji</label>
+            <div class="emoji-input-row">
+              <input type="text" id="cat-icon-input" class="form-input emoji-val-input" value="🚀" maxlength="4" />
+              <!-- Quick Emoji Picker Chips -->
+              <div class="emoji-chip-picker">
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🤖')">🤖</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🌐')">🌐</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🎨')">🎨</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('📱')">📱</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('☁️')">☁️</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('⚡')">⚡</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🔐')">🔐</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('📊')">📊</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🛠️')">🛠️</button>
+                <button type="button" class="emoji-chip" onclick="selectCategoryEmoji('🚀')">🚀</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-action-buttons" style="margin-top: 10px; padding-top: 12px;">
+            <button type="submit" class="action-btn-primary" style="width: 100%; justify-content: center;">
+              <span>➕ Add Category</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Existing Categories List -->
+        <div class="existing-categories-wrap">
+          <h4 class="existing-cat-heading">Active Categories</h4>
+          <div id="category-manager-list" class="category-manager-list">
+            <!-- Dynamically rendered by app.js -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="notion-toast" id="notion-toast">Workspace URL copied to clipboard!</div>
+
+  <!-- JavaScript -->
+  <script src="./app.js"></script>
+</body>
+</html>

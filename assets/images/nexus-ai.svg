@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f1d" />
+      <stop offset="50%" stop-color="#0d1424" />
+      <stop offset="100%" stop-color="#050811" />
+    </linearGradient>
+    <linearGradient id="cyanPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.95" />
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1280" height="720" fill="url(#bgGrad)" />
+
+  <!-- Window Header / Browser Mockup Bar -->
+  <rect x="40" y="30" width="1200" height="660" rx="16" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+  
+  <!-- Header Bar -->
+  <rect x="40" y="30" width="1200" height="50" rx="16" fill="#131d33" />
+  <circle cx="70" cy="55" r="6" fill="#ef4444" />
+  <circle cx="92" cy="55" r="6" fill="#eab308" />
+  <circle cx="114" cy="55" r="6" fill="#22c55e" />
+  
+  <text x="640" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#94a3b8" text-anchor="middle">nexus-ai-chatbot-opal.vercel.app — Enterprise Agentic Platform</text>
+  <rect x="1100" y="44" width="110" height="24" rx="12" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1" />
+  <text x="1155" y="60" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700" fill="#34d399" text-anchor="middle">⚡ LIVE STREAM</text>
+
+  <!-- Sidebar -->
+  <rect x="40" y="80" width="240" height="610" fill="#0c1322" />
+  <rect x="60" y="105" width="200" height="38" rx="8" fill="url(#cyanPurple)" />
+  <text x="160" y="129" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">+ New Agent Session</text>
+  
+  <!-- Sidebar Chat List -->
+  <rect x="60" y="160" width="200" height="34" rx="6" fill="#1e293b" />
+  <text x="75" y="182" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#e2e8f0">🚀 Architecture Review</text>
+
+  <rect x="60" y="202" width="200" height="34" rx="6" fill="transparent" />
+  <text x="75" y="224" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#64748b">📊 Token Cost Optimizer</text>
+
+  <rect x="60" y="244" width="200" height="34" rx="6" fill="transparent" />
+  <text x="75" y="266" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#64748b">🌐 Web Verification Agent</text>
+
+  <rect x="60" y="286" width="200" height="34" rx="6" fill="transparent" />
+  <text x="75" y="308" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" fill="#64748b">🔐 Rate Limiter & Shield</text>
+
+  <!-- Chat Area Main -->
+  <!-- User Message -->
+  <rect x="740" y="115" width="460" height="75" rx="12" fill="#3b82f6" fill-opacity="0.2" stroke="#3b82f6" stroke-width="1.5" />
+  <text x="760" y="145" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#f8fafc" font-weight="500">Analyze the streaming lifecycle & TTFT optimization</text>
+  <text x="760" y="168" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#93c5fd">for high-concurrency enterprise RAG agents.</text>
+
+  <!-- Agent Message -->
+  <rect x="320" y="210" width="880" height="330" rx="14" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.5" />
+  
+  <!-- Agent Badge -->
+  <circle cx="355" cy="245" r="16" fill="url(#cyanPurple)" filter="url(#neonGlow)" />
+  <text x="355" y="250" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="800" fill="#fff" text-anchor="middle">N</text>
+  
+  <text x="385" y="248" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="700" fill="#f8fafc">Nexus Core Agent</text>
+  <rect x="525" y="235" width="80" height="20" rx="10" fill="#8b5cf6" fill-opacity="0.2" />
+  <text x="565" y="249" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#c084fc" text-anchor="middle">SSE Stream</text>
+
+  <rect x="615" y="235" width="95" height="20" rx="10" fill="#06b6d4" fill-opacity="0.2" />
+  <text x="662" y="249" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#67e8f9" text-anchor="middle">TTFT: 48ms</text>
+
+  <!-- Message Content -->
+  <text x="355" y="290" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#cbd5e1">Here is the optimized streaming architecture implementation for ultra-low latency token delivery:</text>
+  
+  <!-- Code Block inside Agent -->
+  <rect x="355" y="310" width="810" height="150" rx="8" fill="#090d16" stroke="#1e293b" />
+  <text x="375" y="338" font-family="'Fira Code', 'Courier New', monospace" font-size="13" fill="#ec4899">export async function <tspan fill="#38bdf8">POST</tspan><tspan fill="#cbd5e1">(req: Request) {</tspan></text>
+  <text x="395" y="362" font-family="'Fira Code', 'Courier New', monospace" font-size="13" fill="#cbd5e1">const stream = await <tspan fill="#a855f7">createAgentPipeline</tspan>({ ratelimit: true, verifyWeb: true });</text>
+  <text x="395" y="386" font-family="'Fira Code', 'Courier New', monospace" font-size="13" fill="#cbd5e1">return new <tspan fill="#38bdf8">StreamingTextResponse</tspan>(stream.toReadableStream(), {</text>
+  <text x="415" y="410" font-family="'Fira Code', 'Courier New', monospace" font-size="13" fill="#34d399">  headers: { "X-Accel-Buffering": "no", "Cache-Control": "no-cache" }</text>
+  <text x="375" y="434" font-family="'Fira Code', 'Courier New', monospace" font-size="13" fill="#cbd5e1">});</text>
+
+  <text x="355" y="495" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" fill="#94a3b8">✔ Token abuse shield enabled &nbsp;•&nbsp; ✔ Contextual real-time web verification &nbsp;•&nbsp; ✔ ARIA screen-reader verified</text>
+
+  <!-- Input Field Bar -->
+  <rect x="320" y="570" width="880" height="60" rx="12" fill="#131d33" stroke="#334155" stroke-width="1" />
+  <text x="345" y="605" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" fill="#64748b">Ask anything or trigger @web-search, @adr-generator...</text>
+  <rect x="1110" y="580" width="75" height="40" rx="8" fill="url(#cyanPurple)" />
+  <text x="1147" y="605" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">Send ➔</text>
+</svg>
