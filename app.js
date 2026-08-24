@@ -963,6 +963,18 @@ const globalSidebar = document.getElementById("global-sidebar");
 const mainStage = document.getElementById("main-scroll-stage");
 
 // =============================================================================
+// ACCESSIBILITY LIVE ANNOUNCER
+// =============================================================================
+function announceToScreenReader(message) {
+  const announcer = document.getElementById("sr-announcer");
+  if (!announcer) return;
+  announcer.textContent = "";
+  setTimeout(() => {
+    announcer.textContent = message;
+  }, 50);
+}
+
+// =============================================================================
 // INITIALIZATION
 // =============================================================================
 function updateSidebarCounts() {
@@ -983,6 +995,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCoverBannerActions();
   setupShareButton();
   updateAdminUI();
+  initDevMazeGame();
 
   // Backdrop dismissal
   const sidebarBackdrop = document.getElementById("sidebar-backdrop");
@@ -1549,30 +1562,33 @@ function drawDevMaze() {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
+  if (!canvas.width || canvas.width < 100) canvas.width = 600;
+  if (!canvas.height || canvas.height < 100) canvas.height = 380;
+
   const cellW = canvas.width / MAZE_GRID[0].length;
   const cellH = canvas.height / MAZE_GRID.length;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Background
-  ctx.fillStyle = "#0c0c0e";
+  // Background (Pathway)
+  ctx.fillStyle = "#10141a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Draw Grid Walls
+  // Draw Grid Walls (Crisp & High Contrast)
   for (let r = 0; r < MAZE_GRID.length; r++) {
     for (let c = 0; c < MAZE_GRID[0].length; c++) {
       if (MAZE_GRID[r][c] === 1) {
-        ctx.fillStyle = "#1e1e24";
+        ctx.fillStyle = "#252d3a";
         ctx.fillRect(c * cellW, r * cellH, cellW, cellH);
-        ctx.strokeStyle = "#27272a";
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#384457";
+        ctx.lineWidth = 1.5;
         ctx.strokeRect(c * cellW, r * cellH, cellW, cellH);
       }
     }
   }
 
   // Draw Collectibles
-  ctx.font = "16px sans-serif";
+  ctx.font = "20px sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   collectibleItems.forEach(item => {
@@ -1582,7 +1598,7 @@ function drawDevMaze() {
   });
 
   // Draw Goal
-  ctx.fillStyle = "#10b981";
+  ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
   ctx.fillRect(goalPos.c * cellW + 4, goalPos.r * cellH + 4, cellW - 8, cellH - 8);
   ctx.fillText("🏁", goalPos.c * cellW + cellW / 2, goalPos.r * cellH + cellH / 2);
 

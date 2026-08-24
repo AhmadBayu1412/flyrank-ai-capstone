@@ -802,11 +802,9 @@
           <div id="view-capstone" class="page-view-panel">
             
             <div class="database-header-wrap">
-              <div class="notion-icon-box">🎓</div>
               <h2 class="notion-title">FlyRank AI Capstone Database</h2>
               
               <div class="notion-callout">
-                <span class="callout-icon">💡</span>
                 <div class="callout-content">
                   <p><strong>Showcase 9 Capstone Projects:</strong> Klik pada kartu proyek mana saja untuk membuka ringkasan teknikal dan membaca dokumen <strong>README.md</strong> lengkap masing-masing repositori.</p>
                 </div>
@@ -829,28 +827,34 @@
               </div>
 
               <div class="toolbar-right">
-                  <select id="category-filter-select" onchange="filterProjects(this.value)" class="notion-select">
-                    <option value="all">📁 All Categories</option>
-                    <option value="ai">🤖 AI & Autonomous Agents</option>
-                    <option value="fullstack">🌐 Real-Time & Full-Stack</option>
-                    <option value="frontend">🎨 Architecture & UI/UX</option>
-                  </select>
+                <!-- Search Box Input -->
+                <div class="notion-search-box">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"/></svg>
+                  <input type="text" id="project-search" placeholder="Search projects..." oninput="handleSearch(this.value)" aria-label="Search projects" />
                 </div>
+
+                <!-- Category Filter -->
+                <select id="category-filter-select" onchange="filterProjects(this.value)" class="notion-select" aria-label="Filter projects by category">
+                  <option value="all">All Categories</option>
+                  <option value="ai">AI & Autonomous Agents</option>
+                  <option value="fullstack">Real-Time & Full-Stack</option>
+                  <option value="frontend">Architecture & UI/UX</option>
+                </select>
 
                 <!-- Admin Action Buttons -->
                 <button class="notion-new-btn admin-only" id="btn-add-project" onclick="openProjectCrudModal()" title="Add New Project" style="display: none;">
-                  <span>➕ Add Project</span>
+                  <span>Add Project</span>
                 </button>
                 <button class="nav-btn admin-only" id="btn-add-category" onclick="openCategoryCrudModal()" title="Add / Manage Categories" style="display: none;">
-                  <span>🏷️ Manage Categories</span>
+                  <span>Manage Categories</span>
                 </button>
-                <button class="nav-btn admin-only" id="btn-reset-db" onclick="resetDatabaseToDefault()" title="Reset database to default flagship projects" style="display: none;">
-                  <span>🔄 Reset DB</span>
+                <button class="nav-btn admin-only" id="btn-reset-db" onclick="resetDatabaseToDefault()" title="Reset database" style="display: none;">
+                  <span>Reset DB</span>
                 </button>
 
                 <!-- Explore button -->
                 <button class="notion-new-btn" onclick="openRandomProject()" title="Explore random showcase project">
-                  <span>⚡ Explore</span>
+                  <span>Explore</span>
                 </button>
               </div>
             </div>
