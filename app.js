@@ -1016,13 +1016,20 @@ function switchPageView(viewId) {
     targetPanel.classList.add("active");
   }
 
-  // 2. Explicitly update sidebar active state for all nav items
+  // 2. Explicitly update sidebar active state & aria-current for all nav items
   document.querySelectorAll(".sidebar-nav-item").forEach(item => {
     const navView = item.getAttribute("data-view");
     if (navView) {
-      item.classList.toggle("active", navView === targetId);
+      const isActive = navView === targetId;
+      item.classList.toggle("active", isActive);
+      if (isActive) {
+        item.setAttribute("aria-current", "page");
+      } else {
+        item.removeAttribute("aria-current");
+      }
     } else {
       item.classList.remove("active");
+      item.removeAttribute("aria-current");
     }
   });
 
@@ -1032,29 +1039,34 @@ function switchPageView(viewId) {
     breadcrumbText.textContent = VIEW_TITLES[targetId];
   }
 
-  // 4. If navigating to capstone database, reset category filter to 'all' by default
+  // 4. Announce navigation to screen reader users (WCAG 4.1.3)
+  announceToScreenReader(`Navigated to ${VIEW_TITLES[targetId]}`);
+
+  // 5. If navigating to capstone database, reset category filter to 'all' by default
   if (targetId === "capstone") {
     currentFilter = "all";
     if (selectFilter) selectFilter.value = "all";
     renderProjects();
   }
 
-  // 5. Update sidebar count badges
+  // 6. Update sidebar count badges
   updateSidebarCounts();
 
-  // 6. Reset scroll
+  // 7. Reset scroll
   if (mainStage) {
     mainStage.scrollTop = 0;
   }
 
-  // 7. Close mobile drawer if open
+  // 8. Close mobile drawer if open
   if (window.innerWidth <= 768 && globalSidebar && globalSidebar.classList.contains("mobile-open")) {
     globalSidebar.classList.remove("mobile-open");
     const backdrop = document.getElementById("sidebar-backdrop");
     if (backdrop) backdrop.classList.remove("active");
+    const toggleBtn = document.getElementById("sidebar-toggle");
+    if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
   }
 
-  // 7. Update URL hash
+  // 9. Update URL hash
   if (history.pushState) {
     history.pushState(null, null, `#${targetId}`);
   } else {
@@ -1097,11 +1109,17 @@ function initViewFromUrlHash() {
 function toggleSidebar() {
   if (!globalSidebar) return;
   const backdrop = document.getElementById("sidebar-backdrop");
+  const toggleBtn = document.getElementById("sidebar-toggle");
+  
   if (window.innerWidth <= 768) {
-    const isOpen = globalSidebar.classList.toggle("mobile-open");
-    if (backdrop) backdrop.classList.toggle("active", isOpen);
+    const isNowOpen = globalSidebar.classList.toggle("mobile-open");
+    if (backdrop) backdrop.classList.toggle("active", isNowOpen);
+    if (toggleBtn) toggleBtn.setAttribute("aria-expanded", isNowOpen ? "true" : "false");
+    announceToScreenReader(isNowOpen ? "Sidebar menu opened" : "Sidebar menu closed");
   } else {
-    globalSidebar.classList.toggle("collapsed");
+    const isNowCollapsed = globalSidebar.classList.toggle("collapsed");
+    if (toggleBtn) toggleBtn.setAttribute("aria-expanded", isNowCollapsed ? "false" : "true");
+    announceToScreenReader(isNowCollapsed ? "Sidebar navigation collapsed" : "Sidebar navigation expanded");
   }
 }
 
@@ -1142,10 +1160,12 @@ function renderProjects() {
   if (filtered.length === 0) {
     gridContainer.innerHTML = "";
     if (emptyState) emptyState.style.display = "block";
+    announceToScreenReader("No projects match your search or filter.");
     return;
   }
 
   if (emptyState) emptyState.style.display = "none";
+  announceToScreenReader(`Displaying ${filtered.length} project(s)`);
   
   gridContainer.innerHTML = filtered.map(project => `
     <article class="notion-card" onclick="openProjectModal('${project.id}')" tabindex="0" role="button" aria-label="Open ${project.title} details">
@@ -1286,6 +1306,7 @@ function openProjectModal(id, defaultTab = "readme") {
   const project = PROJECTS.find(p => p.id === id);
   if (!project || !modal) return;
 
+  lastFocusedElement = document.activeElement;
   currentActiveProjectId = id;
   currentModalTab = defaultTab;
 
@@ -1337,6 +1358,9 @@ function openProjectModal(id, defaultTab = "readme") {
 
   modal.classList.add("open");
   document.body.style.overflow = "hidden";
+  announceToScreenReader(`Opened ${project.title} documentation dialog. Press Escape to close.`);
+  const closeBtn = modal.querySelector(".modal-close-btn");
+  if (closeBtn) closeBtn.focus();
 }
 
 function openProjectReadme(id) {
@@ -1415,6 +1439,10 @@ function closeModal() {
   if (!modal) return;
   modal.classList.remove("open");
   document.body.style.overflow = "";
+  announceToScreenReader("Dialog closed.");
+  if (lastFocusedElement && lastFocusedElement.focus) {
+    lastFocusedElement.focus();
+  }
 }
 
 function handleBackdropClick(event) {
@@ -1431,14 +1459,22 @@ function openRandomProject() {
 // =============================================================================
 function openContactModal() {
   if (!contactModal) return;
+  lastFocusedElement = document.activeElement;
   contactModal.classList.add("open");
   document.body.style.overflow = "hidden";
+  announceToScreenReader("Contact dialog opened. Press Escape to close.");
+  const closeBtn = contactModal.querySelector(".modal-close-btn");
+  if (closeBtn) closeBtn.focus();
 }
 
 function closeContactModal() {
   if (!contactModal) return;
   contactModal.classList.remove("open");
   document.body.style.overflow = "";
+  announceToScreenReader("Contact dialog closed.");
+  if (lastFocusedElement && lastFocusedElement.focus) {
+    lastFocusedElement.focus();
+  }
 }
 
 function handleContactBackdropClick(e) {
@@ -1664,17 +1700,100 @@ function setupCoverBannerActions() {
   }
 }
 
+// =============================================================================
+// SHARE WORKSPACE & SOCIAL CHANNELS
+// =============================================================================
+const SHARE_METADATA = {
+  title: "Ahmad Bayu Samudera — Frontend Portfolio & FlyRank AI Capstone",
+  text: "Explore Ahmad Bayu Samudera's Capstone Showcase: 9 AI agents, real-time telemetry observatories, and interactive Dev Maze game! 🚀",
+  url: "https://flyrank-ai-capstone.netlify.app/"
+};
+
 function setupShareButton() {
   const shareBtn = document.getElementById("btn-share");
   if (!shareBtn) return;
 
-  shareBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      showToast("Workspace URL copied to clipboard!");
-    }).catch(() => {
-      showToast("FlyRank AI Capstone Workspace");
-    });
+  shareBtn.addEventListener("click", async () => {
+    // If Web Share API is available (supports direct share to WhatsApp, etc. with image & text)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: SHARE_METADATA.title,
+          text: SHARE_METADATA.text,
+          url: SHARE_METADATA.url
+        });
+        showToast("Shared successfully! ✨");
+        return;
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          openShareModal();
+        }
+      }
+    } else {
+      openShareModal();
+    }
   });
+}
+
+function openShareModal() {
+  const modal = document.getElementById("share-modal");
+  if (!modal) return;
+  const linkInput = document.getElementById("share-link-input");
+  if (linkInput) {
+    linkInput.value = SHARE_METADATA.url;
+  }
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeShareModal() {
+  const modal = document.getElementById("share-modal");
+  if (!modal) return;
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function handleShareBackdropClick(e) {
+  const modal = document.getElementById("share-modal");
+  if (e.target === modal) closeShareModal();
+}
+
+function copyShareLink() {
+  navigator.clipboard.writeText(SHARE_METADATA.url).then(() => {
+    showToast("Workspace link copied to clipboard! 📋");
+    closeShareModal();
+  }).catch(() => {
+    showToast("Failed to copy link.");
+  });
+}
+
+function shareToPlatform(platform) {
+  const url = encodeURIComponent(SHARE_METADATA.url);
+  const text = encodeURIComponent(SHARE_METADATA.text);
+
+  let targetUrl = "";
+
+  switch (platform) {
+    case "whatsapp":
+      targetUrl = `https://api.whatsapp.com/send?text=${text}%0A%0A${url}`;
+      break;
+    case "linkedin":
+      targetUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      break;
+    case "twitter":
+      targetUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+      break;
+    case "telegram":
+      targetUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+      break;
+    default:
+      copyShareLink();
+      return;
+  }
+
+  if (targetUrl) {
+    window.open(targetUrl, "_blank", "noopener,noreferrer,width=600,height=500");
+  }
 }
 
 function showToast(msg) {

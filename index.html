@@ -4,7 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ahmad Bayu Samudera — Frontend Portfolio & FlyRank AI Capstone</title>
-  <meta name="description" content="Personal Developer Portfolio & FlyRank AI Capstone Showcase by Ahmad Bayu Samudera. Learning every day, building meaningful digital experiences." />
+  <meta name="description" content="Explore 9 production-grade AI agents, real-time telemetry observatories, and interactive Dev Maze game built by Ahmad Bayu Samudera during the FlyRank AI Internship." />
+  <meta name="author" content="Ahmad Bayu Samudera" />
+  <meta name="keywords" content="Ahmad Bayu Samudera, FlyRank AI, Capstone, Frontend Engineering, AI Systems Builder, React, Next.js, Portfolio, Dev Maze" />
+
+  <!-- Open Graph / WhatsApp / LinkedIn / Facebook / Telegram -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://flyrank-ai-capstone.netlify.app/" />
+  <meta property="og:title" content="Ahmad Bayu Samudera — Frontend Portfolio & FlyRank AI Capstone" />
+  <meta property="og:description" content="Explore 9 production-grade AI agents, real-time telemetry observatories, and interactive Dev Maze game built by Ahmad Bayu Samudera during the FlyRank AI Internship." />
+  <meta property="og:image" content="https://flyrank-ai-capstone.netlify.app/assets/images/cover-banner.svg" />
+  <meta property="og:image:secure_url" content="https://flyrank-ai-capstone.netlify.app/assets/images/cover-banner.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="FlyRank AI Capstone Showcase" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://flyrank-ai-capstone.netlify.app/" />
+  <meta name="twitter:title" content="Ahmad Bayu Samudera — Frontend Portfolio & FlyRank AI Capstone" />
+  <meta name="twitter:description" content="Explore 9 production-grade AI agents, real-time telemetry observatories, and interactive Dev Maze game built by Ahmad Bayu Samudera." />
+  <meta name="twitter:image" content="https://flyrank-ai-capstone.netlify.app/assets/images/cover-banner.svg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/images/cover-banner.svg" />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,20 +42,26 @@
 </head>
 <body class="notion-dark">
 
+  <!-- Accessible Skip to Content Link (WCAG 2.4.1) -->
+  <a href="#main-scroll-stage" class="skip-to-content-link">Skip to main content</a>
+
+  <!-- Accessible Live Region Announcer for Screen Readers (WCAG 4.1.3) -->
+  <div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
   <div class="app-layout">
 
     <!-- Mobile Sidebar Backdrop -->
-    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()" aria-hidden="true"></div>
 
     <!-- ================================================================= -->
     <!-- GLOBAL APPLICATION SIDEBAR                                        -->
     <!-- ================================================================= -->
-    <aside class="app-sidebar" id="global-sidebar">
+    <aside class="app-sidebar" id="global-sidebar" aria-label="Main Navigation">
       
       <!-- Sidebar Header (Clean User Identity) -->
       <div class="sidebar-header">
-        <div class="sidebar-user-block" onclick="switchPageView('home')" title="Ahmad Bayu Samudera Workspace">
-          <img src="./assets/images/profile.png" alt="Ahmad Bayu Samudera" class="sidebar-avatar" onerror="this.src='./assets/images/cover-banner.svg'" />
+        <div class="sidebar-user-block" onclick="switchPageView('home')" role="button" tabindex="0" title="Ahmad Bayu Samudera Workspace" aria-label="Ahmad Bayu Samudera Workspace Home">
+          <img src="./assets/images/profile.png" alt="Profile photo of Ahmad Bayu Samudera" class="sidebar-avatar" onerror="this.src='./assets/images/cover-banner.svg'" />
           <div class="sidebar-workspace-info">
             <span class="sidebar-workspace-name">Ahmad Bayu S.</span>
             <span class="sidebar-workspace-tag">Frontend & AI Engineer</span>
@@ -110,44 +139,44 @@
     <!-- ================================================================= -->
     <!-- MAIN CONTENT VIEWPORT                                             -->
     <!-- ================================================================= -->
-    <div class="app-main-viewport">
+    <main class="app-main-viewport" role="main">
       
       <!-- Top Navigation Bar (Clean & No Duplications) -->
-      <header class="notion-nav" id="top-nav">
+      <header class="notion-nav" id="top-nav" role="banner">
         <div class="nav-left">
-          <button class="nav-icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+          <button class="nav-icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar" aria-label="Toggle navigation sidebar" aria-expanded="false" aria-controls="global-sidebar">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="M2 3h12a1 1 0 010 2H2a1 1 0 010-2zm0 4h12a1 1 0 010 2H2a1 1 0 010-2zm0 4h12a1 1 0 010 2H2a1 1 0 010-2z"/>
             </svg>
           </button>
           
-          <div class="notion-breadcrumb">
-            <span class="crumb-icon" onclick="switchPageView('home')" style="cursor: pointer;" title="Go to Home">📂</span>
+          <nav class="notion-breadcrumb" aria-label="Breadcrumb">
+            <span class="crumb-icon" onclick="switchPageView('home')" style="cursor: pointer;" title="Go to Home" aria-hidden="true">📂</span>
             <span class="crumb-text" onclick="switchPageView('home')" style="cursor: pointer;" title="Go to Home">Workspace</span>
-            <span class="crumb-separator">/</span>
-            <span class="crumb-current" id="breadcrumb-current-view">Portfolio & Profile</span>
-          </div>
+            <span class="crumb-separator" aria-hidden="true">/</span>
+            <span class="crumb-current" id="breadcrumb-current-view" aria-current="page">Portfolio & Profile</span>
+          </nav>
 
-          <span class="status-badge-private" onclick="openContactModal()" style="cursor: pointer;" title="Click to Connect / Hire">🚀 Available for Hire</span>
+          <button class="status-badge-private" onclick="openContactModal()" style="cursor: pointer;" title="Click to Connect / Hire" aria-label="Available for Hire. Click to open contact dialog.">🚀 Available for Hire</button>
         </div>
 
         <div class="nav-right">
-          <button class="nav-btn" id="btn-admin-auth" onclick="handleAdminAuthClick()" title="Admin Authentication">
-            <span id="admin-btn-icon">🔒</span>
+          <button class="nav-btn" id="btn-admin-auth" onclick="handleAdminAuthClick()" title="Admin Authentication" aria-label="Admin authentication login">
+            <span id="admin-btn-icon" aria-hidden="true">🔒</span>
             <span id="admin-btn-text">Admin Login</span>
           </button>
-          <button class="nav-btn" id="btn-share" title="Copy Workspace Link">
+          <button class="nav-btn" id="btn-share" title="Share Workspace" aria-label="Share workspace showcase link">
             <span>Share</span>
           </button>
-          <a href="https://www.linkedin.com/in/ahmad-bayu-samudera-985880236/" target="_blank" rel="noopener noreferrer" class="nav-btn" title="LinkedIn Profile">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          <a href="https://www.linkedin.com/in/ahmad-bayu-samudera-985880236/" target="_blank" rel="noopener noreferrer" class="nav-btn" title="LinkedIn Profile" aria-label="Visit Ahmad Bayu Samudera's LinkedIn profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
             <span>LinkedIn</span>
           </a>
-          <a href="https://github.com/AhmadBayu1412" target="_blank" rel="noopener noreferrer" class="nav-btn" title="GitHub Profile">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <a href="https://github.com/AhmadBayu1412" target="_blank" rel="noopener noreferrer" class="nav-btn" title="GitHub Profile" aria-label="Visit Ahmad Bayu Samudera's GitHub profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             <span>GitHub</span>
           </a>
-          <button class="nav-icon-btn" id="btn-theme" title="Toggle Theme (Notion Dark / Light)">
+          <button class="nav-icon-btn" id="btn-theme" title="Toggle Theme" aria-label="Toggle dark and light color theme">
             🌙
           </button>
         </div>
@@ -800,14 +829,6 @@
               </div>
 
               <div class="toolbar-right">
-                <!-- Search input -->
-                <div class="notion-search-box">
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M11.5 7a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"/></svg>
-                  <input type="text" id="project-search" placeholder="Search projects, stack, keywords..." oninput="handleSearch(this.value)" />
-                </div>
-
-                <!-- Filter Dropdown -->
-                <div class="filter-dropdown-container">
                   <select id="category-filter-select" onchange="filterProjects(this.value)" class="notion-select">
                     <option value="all">📁 All Categories</option>
                     <option value="ai">🤖 AI & Autonomous Agents</option>
@@ -861,8 +882,8 @@
   <!-- PROJECT README / DETAIL MODAL                                     -->
   <!-- ================================================================= -->
   <div class="notion-modal-backdrop" id="project-modal" onclick="handleBackdropClick(event)">
-    <div class="notion-modal-container" role="dialog" aria-modal="true">
-      <button class="modal-close-btn" onclick="closeModal()" title="Close (Esc)">✕</button>
+    <div class="notion-modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle">
+      <button class="modal-close-btn" onclick="closeModal()" title="Close (Esc)" aria-label="Close project modal">✕</button>
       
       <!-- Modal Banner Cover -->
       <div class="modal-cover-wrap">
@@ -938,12 +959,12 @@
   <!-- CONTACT MODAL                                                     -->
   <!-- ================================================================= -->
   <div class="notion-modal-backdrop" id="contact-modal" onclick="handleContactBackdropClick(event)">
-    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true">
-      <button class="modal-close-btn" onclick="closeContactModal()" title="Close (Esc)">✕</button>
+    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true" aria-labelledby="contact-modal-title">
+      <button class="modal-close-btn" onclick="closeContactModal()" title="Close (Esc)" aria-label="Close contact dialog">✕</button>
       
       <div class="modal-body-content contact-modal-body">
-        <div class="modal-icon-badge">💬</div>
-        <h2 class="modal-title">Let's Connect & Collaborate</h2>
+        <div class="modal-icon-badge" aria-hidden="true">💬</div>
+        <h2 class="modal-title" id="contact-modal-title">Let's Connect & Collaborate</h2>
         <p class="modal-subtitle">Feel free to reach out for engineering roles, project inquiries, or technical discussion!</p>
 
         <div class="contact-links-grid">
@@ -984,15 +1005,15 @@
   <!-- ADMIN AUTHENTICATION MODAL (2FA / EMAIL VERIFICATION)              -->
   <!-- ================================================================= -->
   <div class="notion-modal-backdrop" id="admin-auth-modal" onclick="handleAuthBackdropClick(event)">
-    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true">
-      <button class="modal-close-btn" onclick="closeAdminAuthModal()" title="Close (Esc)">✕</button>
+    <div class="notion-modal-container contact-modal-container" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+      <button class="modal-close-btn" onclick="closeAdminAuthModal()" title="Close (Esc)" aria-label="Close admin authentication dialog">✕</button>
       
       <div class="modal-body-content contact-modal-body">
-        <div class="modal-icon-badge" id="auth-modal-icon">🛡️</div>
+        <div class="modal-icon-badge" id="auth-modal-icon" aria-hidden="true">🛡️</div>
         
         <!-- Step 1: Login Form (Email & Password) -->
         <div id="auth-step-login">
-          <h2 class="modal-title">Admin Authentication</h2>
+          <h2 class="modal-title" id="auth-modal-title">Admin Authentication</h2>
           <p class="modal-subtitle">Enter administrator credentials to unlock full CRUD editing capabilities.</p>
 
           <form class="crud-form" onsubmit="handleAdminLoginSubmit(event)">
@@ -1063,8 +1084,8 @@
   <!-- PROJECT CRUD FORM MODAL (CREATE & UPDATE)                         -->
   <!-- ================================================================= -->
   <div class="notion-modal-backdrop" id="project-crud-modal" onclick="handleCrudBackdropClick(event)">
-    <div class="notion-modal-container" style="max-width: 680px;" role="dialog" aria-modal="true">
-      <button class="modal-close-btn" onclick="closeProjectCrudModal()" title="Close (Esc)">✕</button>
+    <div class="notion-modal-container" style="max-width: 680px;" role="dialog" aria-modal="true" aria-labelledby="crud-modal-title">
+      <button class="modal-close-btn" onclick="closeProjectCrudModal()" title="Close (Esc)" aria-label="Close project editor dialog">✕</button>
       
       <div class="modal-body-content">
         <div class="modal-icon-badge" id="crud-modal-badge">✨</div>
@@ -1159,12 +1180,12 @@
   <!-- CATEGORY MANAGEMENT & CREATION MODAL                             -->
   <!-- ================================================================= -->
   <div class="notion-modal-backdrop" id="category-crud-modal" onclick="handleCategoryBackdropClick(event)">
-    <div class="notion-modal-container" style="max-width: 580px;" role="dialog" aria-modal="true">
-      <button class="modal-close-btn" onclick="closeCategoryCrudModal()" title="Close (Esc)">✕</button>
+    <div class="notion-modal-container" style="max-width: 580px;" role="dialog" aria-modal="true" aria-labelledby="category-modal-title">
+      <button class="modal-close-btn" onclick="closeCategoryCrudModal()" title="Close (Esc)" aria-label="Close category manager dialog">✕</button>
       
       <div class="modal-body-content">
-        <div class="modal-icon-badge" id="category-modal-badge">🏷️</div>
-        <h2 class="modal-title">Category Management</h2>
+        <div class="modal-icon-badge" id="category-modal-badge" aria-hidden="true">🏷️</div>
+        <h2 class="modal-title" id="category-modal-title">Category Management</h2>
         <p class="modal-subtitle">Add new project workflows or manage existing classification categories.</p>
 
         <!-- Add Category Form -->
@@ -1215,6 +1236,55 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- SHARE WORKSPACE MODAL                                             -->
+  <!-- ================================================================= -->
+  <div class="notion-modal-backdrop" id="share-modal" onclick="handleShareBackdropClick(event)">
+    <div class="notion-modal-container" style="max-width: 480px;" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+      <button class="modal-close-btn" onclick="closeShareModal()" title="Close (Esc)" aria-label="Close share dialog">✕</button>
+      
+      <div class="modal-body-content contact-modal-body">
+        <div class="modal-icon-badge" aria-hidden="true">🔗</div>
+        <h2 class="modal-title" id="share-modal-title">Share Workspace</h2>
+        <p class="modal-subtitle">Share this capstone showcase with recruiters, peers, or social channels with rich link previews.</p>
+
+        <!-- Rich Card Preview -->
+        <div class="share-preview-card">
+          <img src="./assets/images/cover-banner.svg" alt="FlyRank AI Capstone" class="share-preview-img" />
+          <div class="share-preview-body">
+            <div class="share-preview-site">flyrank-ai-capstone.netlify.app</div>
+            <div class="share-preview-title">Ahmad Bayu Samudera — Frontend Portfolio & AI Capstone</div>
+            <div class="share-preview-desc">Explore 9 production-grade AI agents, real-time telemetry observatories, and interactive Dev Maze game.</div>
+          </div>
+        </div>
+
+        <!-- Social Share Actions -->
+        <div class="share-platform-grid">
+          <a href="#" class="share-platform-btn whatsapp" onclick="shareToPlatform('whatsapp'); return false;" title="Share on WhatsApp">
+            <span>💬 WhatsApp</span>
+          </a>
+          <a href="#" class="share-platform-btn linkedin" onclick="shareToPlatform('linkedin'); return false;" title="Share on LinkedIn">
+            <span>💼 LinkedIn</span>
+          </a>
+          <a href="#" class="share-platform-btn twitter" onclick="shareToPlatform('twitter'); return false;" title="Share on X / Twitter">
+            <span>🐦 X / Twitter</span>
+          </a>
+          <a href="#" class="share-platform-btn telegram" onclick="shareToPlatform('telegram'); return false;" title="Share on Telegram">
+            <span>✈️ Telegram</span>
+          </a>
+        </div>
+
+        <!-- Copy Link Field -->
+        <div class="share-copy-row">
+          <input type="text" id="share-link-input" class="share-url-input" value="https://flyrank-ai-capstone.netlify.app/" readonly />
+          <button class="action-btn-primary" onclick="copyShareLink()">
+            <span>📋 Copy</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
