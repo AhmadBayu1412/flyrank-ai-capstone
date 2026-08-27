@@ -263,9 +263,42 @@ function saveStoredProjects(list) {
 let PROJECTS = getStoredProjects();
 
 // =============================================================================
+// HTML UTILITIES & XSS PROTECTION
+// =============================================================================
+/**
+ * Escape HTML special characters to prevent XSS in template literals.
+ * Use this for any user-controlled or project data inserted into innerHTML.
+ */
+function escapeHtml(str) {
+  if (str == null) return "";
+  const div = document.createElement("div");
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+/**
+ * Render markdown to sanitized HTML using marked + DOMPurify.
+ * Prevents XSS from malicious markdown content.
+ */
+function renderMarkdownSafe(markdown) {
+  if (typeof marked === "undefined") {
+    return `<pre>${escapeHtml(markdown)}</pre>`;
+  }
+  const raw = marked.parse(markdown || "");
+  if (typeof DOMPurify !== "undefined") {
+    return DOMPurify.sanitize(raw);
+  }
+  return raw;
+}
+
+// =============================================================================
 // SECURE ADMIN AUTHENTICATION (HASH-VERIFIED & 2FA SECURITY SIMULATION)
 // =============================================================================
-// Stored as one-way SHA-256 cryptographic hashes (plaintext credentials are never in code)
+// WARNING: This is a DEMO-ONLY authentication simulation.
+// Credentials are hardcoded as SHA-256 hashes in client-side JavaScript.
+// In a real application, authentication MUST be performed server-side.
+// This provides NO real security — it only demonstrates UI patterns.
+// DO NOT use this pattern for any production authentication.
 const AUTH_SECURITY_HASH = {
   e: "6ddd1a7ad7baad9f449bbf8998a22754e6d4668552da5d98ec81c29a6f66faf4",
   p: "c4f5abc04a349969b0885b0e77cbefd29ecb43a547e4bf58f48c176543539266"
@@ -337,7 +370,7 @@ function openAdminAuthModal() {
   if (emailInput) emailInput.value = "";
   if (passInput) passInput.value = "";
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
   setTimeout(() => { if (emailInput) emailInput.focus(); }, 100);
 }
@@ -345,7 +378,7 @@ function openAdminAuthModal() {
 function closeAdminAuthModal() {
   const modal = document.getElementById("admin-auth-modal");
   if (!modal) return;
-  modal.classList.remove("open");
+  animateModalLeave(modal);
   document.body.style.overflow = "";
 }
 
@@ -387,6 +420,8 @@ async function handleAdminLoginSubmit(e) {
   }
 }
 
+// NOTE: activeOtpCode is stored in a plain JS variable — not a real security mechanism.
+// In production, OTPs must be generated server-side and sent via SMS/email.
 function generateAndSendOtp() {
   activeOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
   
@@ -461,19 +496,24 @@ function renderSidebarCategories() {
 
     const itemsHtml = catProjects.length > 0
       ? catProjects.map(p => `
-          <a class="sidebar-nav-item" data-project-id="${p.id}" onclick="openProjectReadme('${p.id}')" title="${p.title}">
+          <a class="sidebar-nav-item" data-project-id="${escapeHtml(p.id)}" onclick="openProjectReadme('${escapeHtml(p.id)}')" title="${escapeHtml(p.title)}">
             <span class="nav-icon">${p.icon || "🚀"}</span>
-            <span class="nav-text">${p.title}</span>
+            <span class="nav-text">${escapeHtml(p.title)}</span>
           </a>
         `).join("")
       : `<div class="sidebar-category-empty">No projects yet</div>`;
 
     return `
       <div class="sidebar-accordion-group ${isOpen ? "open" : ""}" id="accordion-group-${cat.id}">
-        <div class="sidebar-category-header" onclick="toggleSidebarCategory('${cat.id}')" title="Filter by ${cat.label}">
+        <div class="sidebar-category-header" role="button" tabindex="0"
+             onclick="toggleSidebarCategory('${cat.id}')"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSidebarCategory('${cat.id}');}"
+             aria-expanded="${isOpen}"
+             aria-controls="cat-items-${cat.id}"
+             title="Filter by ${escapeHtml(cat.label)}">
           <div class="cat-header-left">
             <span class="cat-chevron" id="chevron-${cat.id}">▶</span>
-            <span class="cat-title">${cat.icon} ${cat.label}</span>
+            <span class="cat-title">${cat.icon} ${escapeHtml(cat.label)}</span>
           </div>
           <span class="cat-count">${catProjects.length}</span>
         </div>
@@ -492,7 +532,7 @@ function populateCategoryDropdowns() {
     const prevVal = filterSelect.value || currentFilter || "all";
     filterSelect.innerHTML = `
       <option value="all">📁 All Categories</option>
-      ${CATEGORIES.map(c => `<option value="${c.id}">${c.icon} ${c.label}</option>`).join("")}
+      ${CATEGORIES.map(c => `<option value="${escapeHtml(c.id)}">${c.icon} ${escapeHtml(c.label)}</option>`).join("")}
     `;
     if (CATEGORIES.some(c => c.id === prevVal) || prevVal === "all") {
       filterSelect.value = prevVal;
@@ -507,7 +547,7 @@ function populateCategoryDropdowns() {
   if (crudSelect) {
     const prevVal = crudSelect.value;
     crudSelect.innerHTML = CATEGORIES.map(c => `
-      <option value="${c.id}">${c.icon} ${c.label}</option>
+      <option value="${escapeHtml(c.id)}">${c.icon} ${escapeHtml(c.label)}</option>
     `).join("");
     if (prevVal && CATEGORIES.some(c => c.id === prevVal)) {
       crudSelect.value = prevVal;
@@ -532,14 +572,14 @@ function renderCategoryManagerList() {
         <div class="category-manager-item-left">
           <span class="category-item-icon">${cat.icon}</span>
           <div>
-            <div class="category-item-name">${cat.label}</div>
-            <div class="category-item-slug">${cat.id}</div>
+            <div class="category-item-name">${escapeHtml(cat.label)}</div>
+            <div class="category-item-slug">${escapeHtml(cat.id)}</div>
           </div>
         </div>
         <div class="category-manager-item-right">
           <span class="category-item-badge">${projectCount} project${projectCount !== 1 ? "s" : ""}</span>
           ${!isDefault ? `
-            <button type="button" class="category-delete-btn" onclick="deleteCategory('${cat.id}')" title="Delete category">🗑️</button>
+            <button type="button" class="category-delete-btn" onclick="deleteCategory('${escapeHtml(cat.id)}')" title="Delete category">🗑️</button>
           ` : `
             <span style="font-size: 10px; color: var(--muted-foreground); opacity: 0.6;">(System)</span>
           `}
@@ -568,7 +608,7 @@ function openCategoryCrudModal() {
 
   renderCategoryManagerList();
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
   setTimeout(() => { if (nameInput) nameInput.focus(); }, 100);
 }
@@ -576,7 +616,7 @@ function openCategoryCrudModal() {
 function closeCategoryCrudModal() {
   const modal = document.getElementById("category-crud-modal");
   if (!modal) return;
-  modal.classList.remove("open");
+  animateModalLeave(modal);
   document.body.style.overflow = "";
 }
 
@@ -767,7 +807,7 @@ function openProjectCrudModal(projectId = null) {
     if (readmeContentInput) readmeContentInput.value = "";
   }
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
   setTimeout(() => { if (titleInput) titleInput.focus(); }, 100);
 }
@@ -775,7 +815,7 @@ function openProjectCrudModal(projectId = null) {
 function closeProjectCrudModal() {
   const modal = document.getElementById("project-crud-modal");
   if (!modal) return;
-  modal.classList.remove("open");
+  animateModalLeave(modal);
   document.body.style.overflow = "";
 }
 
@@ -996,6 +1036,13 @@ document.addEventListener("DOMContentLoaded", () => {
   setupShareButton();
   updateAdminUI();
   initDevMazeGame();
+  initMotionAnimations();
+
+  // Animate initial featured cards on load
+  setTimeout(() => {
+    const cards = document.querySelectorAll(".featured-cards-grid .notion-card");
+    animateCardEntrance(Array.from(cards));
+  }, 100);
 
   // Backdrop dismissal
   const sidebarBackdrop = document.getElementById("sidebar-backdrop");
@@ -1010,7 +1057,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // =============================================================================
 // ROUTER & VIEW SWITCHING
 // =============================================================================
-function switchPageView(viewId) {
+async function switchPageView(viewId) {
   let targetId = viewId;
   if (targetId === "portfolio" || targetId === "profile") {
     targetId = "home";
@@ -1018,18 +1065,28 @@ function switchPageView(viewId) {
 
   if (!VIEW_TITLES[targetId]) return;
 
+  // Don't re-switch if already on this view
+  if (currentActiveView === targetId) return;
+
+  const prevView = currentActiveView;
   currentActiveView = targetId;
 
-  // 1. Switch active page panels
+  // 1. Animate out current panel
+  const prevPanel = document.getElementById(`view-${prevView}`);
+  if (prevPanel) {
+    await animatePageExit(prevPanel);
+  }
+
+  // 2. Switch active page panels
   document.querySelectorAll(".page-view-panel").forEach(panel => {
     panel.classList.remove("active");
   });
   const targetPanel = document.getElementById(`view-${targetId}`);
   if (targetPanel) {
-    targetPanel.classList.add("active");
+    await animatePageEnter(targetPanel);
   }
 
-  // 2. Explicitly update sidebar active state & aria-current for all nav items
+  // 3. Explicitly update sidebar active state & aria-current for all nav items
   document.querySelectorAll(".sidebar-nav-item").forEach(item => {
     const navView = item.getAttribute("data-view");
     if (navView) {
@@ -1046,31 +1103,39 @@ function switchPageView(viewId) {
     }
   });
 
-  // 3. Update breadcrumb text
+  // 4. Update breadcrumb text
   const breadcrumbText = document.getElementById("breadcrumb-current-view");
   if (breadcrumbText) {
     breadcrumbText.textContent = VIEW_TITLES[targetId];
   }
 
-  // 4. Announce navigation to screen reader users (WCAG 4.1.3)
+  // 5. Announce navigation to screen reader users (WCAG 4.1.3)
   announceToScreenReader(`Navigated to ${VIEW_TITLES[targetId]}`);
 
-  // 5. If navigating to capstone database, reset category filter to 'all' by default
+  // 6. If navigating to capstone database, reset category filter to 'all' by default
   if (targetId === "capstone") {
     currentFilter = "all";
     if (selectFilter) selectFilter.value = "all";
     renderProjects();
   }
 
-  // 6. Update sidebar count badges
+  // 7. Animate new cards in the target view
+  if (targetId === "capstone") {
+    setTimeout(() => {
+      const cards = document.querySelectorAll("#projects-grid .notion-card");
+      animateCardEntrance(Array.from(cards));
+    }, 50);
+  }
+
+  // 8. Update sidebar count badges
   updateSidebarCounts();
 
-  // 7. Reset scroll
+  // 9. Reset scroll
   if (mainStage) {
     mainStage.scrollTop = 0;
   }
 
-  // 8. Close mobile drawer if open
+  // 10. Close mobile drawer if open
   if (window.innerWidth <= 768 && globalSidebar && globalSidebar.classList.contains("mobile-open")) {
     globalSidebar.classList.remove("mobile-open");
     const backdrop = document.getElementById("sidebar-backdrop");
@@ -1079,7 +1144,7 @@ function switchPageView(viewId) {
     if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
   }
 
-  // 9. Update URL hash
+  // 11. Update URL hash
   if (history.pushState) {
     history.pushState(null, null, `#${targetId}`);
   } else {
@@ -1139,7 +1204,11 @@ function toggleSidebar() {
 function toggleSidebarCategory(catId) {
   const group = document.getElementById(`accordion-group-${catId}`);
   if (!group) return;
+  const header = group.querySelector(".sidebar-category-header");
   const isNowOpen = group.classList.toggle("open");
+  if (header) {
+    header.setAttribute("aria-expanded", isNowOpen);
+  }
   if (isNowOpen) {
     openCategoryAccordions.add(catId);
   } else {
@@ -1181,32 +1250,32 @@ function renderProjects() {
   announceToScreenReader(`Displaying ${filtered.length} project(s)`);
   
   gridContainer.innerHTML = filtered.map(project => `
-    <article class="notion-card" onclick="openProjectModal('${project.id}')" tabindex="0" role="button" aria-label="Open ${project.title} details">
+    <article class="notion-card" onclick="openProjectModal('${escapeHtml(project.id)}')" tabindex="0" role="button" aria-label="Open ${escapeHtml(project.title)} details">
       <div class="card-cover">
-        <img src="${project.cover}" alt="${project.title} Preview" loading="lazy" />
-        <span class="card-badge-overlay">${project.categoryLabel || "Project"}</span>
+        <img src="${escapeHtml(project.cover)}" alt="${escapeHtml(project.title)} Preview" loading="lazy" />
+        <span class="card-badge-overlay">${escapeHtml(project.categoryLabel || "Project")}</span>
         ${isAdmin ? `
           <div class="card-admin-controls" onclick="event.stopPropagation()">
-            <button class="card-admin-btn" onclick="openProjectCrudModal('${project.id}')" title="Edit Project">✏️</button>
-            <button class="card-admin-btn delete" onclick="deleteProject('${project.id}')" title="Delete Project">🗑️</button>
+            <button class="card-admin-btn" onclick="openProjectCrudModal('${escapeHtml(project.id)}')" title="Edit Project">✏️</button>
+            <button class="card-admin-btn delete" onclick="deleteProject('${escapeHtml(project.id)}')" title="Delete Project">🗑️</button>
           </div>
         ` : ""}
       </div>
       <div class="card-content">
         <div class="card-header-row">
-          <span class="card-icon">${project.icon}</span>
-          <h3 class="card-title">${project.title}</h3>
+          <span class="card-icon">${project.icon || "🚀"}</span>
+          <h3 class="card-title">${escapeHtml(project.title)}</h3>
         </div>
-        <p class="card-excerpt">${project.excerpt}</p>
+        <p class="card-excerpt">${escapeHtml(project.excerpt)}</p>
         <div class="card-tags-row">
-          ${(project.tags || []).slice(0, 3).map(tag => `<span class="pill-tag ${project.category}">${tag}</span>`).join("")}
+          ${(project.tags || []).slice(0, 3).map(tag => `<span class="pill-tag ${project.category}">${escapeHtml(tag)}</span>`).join("")}
           ${(project.tags || []).length > 3 ? `<span class="pill-tag">+${project.tags.length - 3}</span>` : ""}
         </div>
         <div class="card-footer-actions" onclick="event.stopPropagation()">
-          <a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" class="card-link-btn" title="Open live demo">
+          <a href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer" class="card-link-btn" title="Open live demo">
             <span>Live Demo</span> ↗
           </a>
-          <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="card-repo-btn" title="View GitHub repository">
+          <a href="${escapeHtml(project.githubUrl)}" target="_blank" rel="noopener noreferrer" class="card-repo-btn" title="View GitHub repository">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             <span>GitHub</span>
           </a>
@@ -1223,32 +1292,32 @@ function renderFeaturedProjects() {
   const isAdmin = isAdminLoggedIn();
 
   container.innerHTML = PROJECTS.map(project => `
-    <article class="notion-card" onclick="openProjectModal('${project.id}')" tabindex="0" role="button" aria-label="Open ${project.title} details">
+    <article class="notion-card" onclick="openProjectModal('${escapeHtml(project.id)}')" tabindex="0" role="button" aria-label="Open ${escapeHtml(project.title)} details">
       <div class="card-cover">
-        <img src="${project.cover}" alt="${project.title} Preview" loading="lazy" />
-        <span class="card-badge-overlay">${project.categoryLabel || "Project"}</span>
+        <img src="${escapeHtml(project.cover)}" alt="${escapeHtml(project.title)} Preview" loading="lazy" />
+        <span class="card-badge-overlay">${escapeHtml(project.categoryLabel || "Project")}</span>
         ${isAdmin ? `
           <div class="card-admin-controls" onclick="event.stopPropagation()">
-            <button class="card-admin-btn" onclick="openProjectCrudModal('${project.id}')" title="Edit Project">✏️</button>
-            <button class="card-admin-btn delete" onclick="deleteProject('${project.id}')" title="Delete Project">🗑️</button>
+            <button class="card-admin-btn" onclick="openProjectCrudModal('${escapeHtml(project.id)}')" title="Edit Project">✏️</button>
+            <button class="card-admin-btn delete" onclick="deleteProject('${escapeHtml(project.id)}')" title="Delete Project">🗑️</button>
           </div>
         ` : ""}
       </div>
       <div class="card-content">
         <div class="card-header-row">
-          <span class="card-icon">${project.icon}</span>
-          <h3 class="card-title">${project.title}</h3>
+          <span class="card-icon">${project.icon || "🚀"}</span>
+          <h3 class="card-title">${escapeHtml(project.title)}</h3>
         </div>
-        <p class="card-excerpt">${project.excerpt}</p>
+        <p class="card-excerpt">${escapeHtml(project.excerpt)}</p>
         <div class="card-tags-row">
-          ${(project.tags || []).slice(0, 3).map(tag => `<span class="pill-tag ${project.category}">${tag}</span>`).join("")}
+          ${(project.tags || []).slice(0, 3).map(tag => `<span class="pill-tag ${project.category}">${escapeHtml(tag)}</span>`).join("")}
           ${(project.tags || []).length > 3 ? `<span class="pill-tag">+${project.tags.length - 3}</span>` : ""}
         </div>
         <div class="card-footer-actions" onclick="event.stopPropagation()">
-          <a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" class="card-link-btn">
+          <a href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer" class="card-link-btn">
             <span>Live Demo</span> ↗
           </a>
-          <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
+          <a href="${escapeHtml(project.githubUrl)}" target="_blank" rel="noopener noreferrer" class="card-repo-btn">
             <span>GitHub</span>
           </a>
         </div>
@@ -1298,18 +1367,10 @@ async function loadAndRenderMarkdown(filePath, targetElement, fallbackMarkdown) 
     const response = await fetch(filePath);
     if (!response.ok) throw new Error("Fetch failed");
     const markdown = await response.text();
-    if (typeof marked !== "undefined") {
-      targetElement.innerHTML = marked.parse(markdown);
-    } else {
-      targetElement.innerHTML = `<pre>${markdown}</pre>`;
-    }
+    targetElement.innerHTML = renderMarkdownSafe(markdown);
   } catch (err) {
     const content = fallbackMarkdown || `# Document (${filePath})\n\nUnable to fetch directly via file:// protocol. Please open with a local web server (e.g. \`python -m http.server\` or \`npx serve\`).`;
-    if (typeof marked !== "undefined") {
-      targetElement.innerHTML = marked.parse(content);
-    } else {
-      targetElement.innerHTML = `<pre>${content}</pre>`;
-    }
+    targetElement.innerHTML = renderMarkdownSafe(content);
   } finally {
     if (loadingElem) loadingElem.style.display = "none";
   }
@@ -1328,8 +1389,8 @@ function openProjectModal(id, defaultTab = "readme") {
   document.getElementById("modal-title").textContent = project.title;
   document.getElementById("modal-subtitle").textContent = project.subtitle;
 
-  document.getElementById("modal-prop-category").innerHTML = `<span class="pill-tag ${project.category}">${project.categoryLabel || "Project"}</span>`;
-  document.getElementById("modal-prop-stack").innerHTML = (project.tags || []).map(t => `<span class="pill-tag ${project.category}">${t}</span>`).join("");
+  document.getElementById("modal-prop-category").innerHTML = `<span class="pill-tag ${project.category}">${escapeHtml(project.categoryLabel || "Project")}</span>`;
+  document.getElementById("modal-prop-stack").innerHTML = (project.tags || []).map(t => `<span class="pill-tag ${project.category}">${escapeHtml(t)}</span>`).join("");
   
   const repoElem = document.getElementById("modal-prop-repo");
   repoElem.href = project.githubUrl;
@@ -1345,7 +1406,7 @@ function openProjectModal(id, defaultTab = "readme") {
   highlightsList.innerHTML = (project.highlights || [
     "High-performance architecture and modern frontend best practices.",
     "Responsive, accessible, and user-centric design."
-  ]).map(h => `<li>${h}</li>`).join("");
+  ]).map(h => `<li>${escapeHtml(h)}</li>`).join("");
 
   document.getElementById("modal-btn-live").href = project.liveUrl;
   document.getElementById("modal-btn-github").href = project.githubUrl;
@@ -1360,16 +1421,12 @@ function openProjectModal(id, defaultTab = "readme") {
     );
   } else if (project.readmeContent) {
     const renderedBody = document.getElementById("modal-readme-rendered");
-    if (typeof marked !== "undefined") {
-      renderedBody.innerHTML = marked.parse(project.readmeContent);
-    } else {
-      renderedBody.innerHTML = `<pre>${project.readmeContent}</pre>`;
-    }
+    renderedBody.innerHTML = renderMarkdownSafe(project.readmeContent);
   } else {
-    document.getElementById("modal-readme-rendered").innerHTML = `<h1>${project.title}</h1><p>${project.overview || project.excerpt}</p>`;
+    document.getElementById("modal-readme-rendered").innerHTML = `<h1>${escapeHtml(project.title)}</h1><p>${escapeHtml(project.overview || project.excerpt)}</p>`;
   }
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
   announceToScreenReader(`Opened ${project.title} documentation dialog. Press Escape to close.`);
   const closeBtn = modal.querySelector(".modal-close-btn");
@@ -1398,7 +1455,7 @@ function openMainReadme() {
   switchModalTab("readme");
   loadAndRenderMarkdown("./README.md", document.getElementById("modal-readme-rendered"), "# FlyRank AI Capstone Workspace\n\nFull portfolio and database of 9 flagship projects by Ahmad Bayu Samudera.");
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
 }
 
@@ -1424,7 +1481,7 @@ function openRetrospectiveModal() {
   switchModalTab("readme");
   loadAndRenderMarkdown("./RETROSPECTIVE.md", document.getElementById("modal-readme-rendered"), "# Retrospective: From Prompter to AI Systems Builder\n\n- **Author:** Ahmad Bayu Samudera\n- **Track:** General AI Fluency\n- **Submission:** Final Capstone Checkpoint (Assignment 8.2 / FL-10)\n- **Hours Log:** 4 hours/day = 28 hours/week x 7 weeks = 196 hours");
 
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
 }
 
@@ -1450,7 +1507,7 @@ function switchModalTab(tab) {
 
 function closeModal() {
   if (!modal) return;
-  modal.classList.remove("open");
+  animateModalLeave(modal);
   document.body.style.overflow = "";
   announceToScreenReader("Dialog closed.");
   if (lastFocusedElement && lastFocusedElement.focus) {
@@ -1473,8 +1530,7 @@ function openRandomProject() {
 function openContactModal() {
   if (!contactModal) return;
   lastFocusedElement = document.activeElement;
-  contactModal.classList.add("open");
-  document.body.style.overflow = "hidden";
+  animateModalEnter(contactModal);
   announceToScreenReader("Contact dialog opened. Press Escape to close.");
   const closeBtn = contactModal.querySelector(".modal-close-btn");
   if (closeBtn) closeBtn.focus();
@@ -1482,8 +1538,7 @@ function openContactModal() {
 
 function closeContactModal() {
   if (!contactModal) return;
-  contactModal.classList.remove("open");
-  document.body.style.overflow = "";
+  animateModalLeave(contactModal);
   announceToScreenReader("Contact dialog closed.");
   if (lastFocusedElement && lastFocusedElement.focus) {
     lastFocusedElement.focus();
@@ -1758,14 +1813,14 @@ function openShareModal() {
   if (linkInput) {
     linkInput.value = SHARE_METADATA.url;
   }
-  modal.classList.add("open");
+  animateModalEnter(modal);
   document.body.style.overflow = "hidden";
 }
 
 function closeShareModal() {
   const modal = document.getElementById("share-modal");
   if (!modal) return;
-  modal.classList.remove("open");
+  animateModalLeave(modal);
   document.body.style.overflow = "";
 }
 

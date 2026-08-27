@@ -3,7 +3,6 @@
 **Assignment 8.1: Documentation & Demo (FL-09)**  
 **Author:** Ahmad Bayu Samudera ([@AhmadBayu1412](https://github.com/AhmadBayu1412))  
 **Track:** General AI Fluency  
-**Live Portfolio:** [https://ahmadbayusamudera.flyrank.ai](https://ahmadbayusamudera.flyrank.ai)  
 **Demo Video:** [Tautkan Link Video Demo 3–5 Menit di sini (Loom / YouTube / Drive)]  
 
 ---

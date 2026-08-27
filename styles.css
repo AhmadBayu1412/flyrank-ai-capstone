@@ -55,6 +55,9 @@
   --amber-badge-text: #fde68a;
   --amber-badge-border: rgba(245, 158, 11, 0.2);
 
+  /* Primary Accent (used in share preview) */
+  --primary-accent: #6366f1;
+
   /* Typography & Sizing */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-heading: 'Poppins', var(--font-sans);
@@ -728,15 +731,60 @@ body.notion-light .notion-nav {
 
 .page-view-panel {
   display: none;
-  animation: shadcnFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: shadcnFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .page-view-panel.active {
   display: block;
+  animation: shadcnFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.page-view-panel.exiting {
+  animation: shadcnFadeOut 0.18s cubic-bezier(0.4, 0, 1, 1) both;
 }
 
 @keyframes shadcnFadeIn {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shadcnFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Scroll-triggered reveal animation (used by IntersectionObserver) */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger card entrance animation (CSS fallback for Motion One) */
+@keyframes staggerCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.stagger-card {
+  animation: staggerCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Accordion smooth expand */
+.sidebar-category-items {
+  display: none;
+  overflow: hidden;
+}
+.sidebar-accordion-group.open > .sidebar-category-items {
+  display: flex;
 }
 
 /* ==========================================================================
@@ -1758,7 +1806,7 @@ body.notion-light .notion-nav {
   z-index: 300;
   opacity: 0;
   visibility: hidden;
-  transition: var(--transition);
+  transition: opacity 0.25s ease, backdrop-filter 0.25s ease;
 }
 .notion-modal-backdrop.open {
   opacity: 1;
@@ -1775,10 +1823,15 @@ body.notion-light .notion-nav {
   overflow-y: auto;
   position: relative;
   box-shadow: var(--shadow-lg);
-  transform: translateY(12px) scale(0.98);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Initial hidden state — Motion One will override these inline */
+  opacity: 0;
+  transform: translateY(16px) scale(0.94);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.28s ease;
 }
 .notion-modal-backdrop.open .notion-modal-container {
+  opacity: 1;
   transform: translateY(0) scale(1);
 }
 
@@ -2423,7 +2476,7 @@ body.notion-light .notion-nav {
   position: fixed;
   bottom: 24px;
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
+  transform: translateX(-50%) translateY(24px);
   background: var(--secondary);
   border: 1px solid var(--border-hover);
   color: var(--foreground);
@@ -2434,7 +2487,17 @@ body.notion-light .notion-nav {
   box-shadow: var(--shadow-lg);
   z-index: 400;
   opacity: 0;
-  transition: var(--transition);
+  pointer-events: none;
+  /* Motion One will override inline styles, CSS is fallback */
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease;
+}
+/* CSS fallback when Motion One is unavailable */
+.notion-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 .notion-toast.show {
   transform: translateX(-50%) translateY(0);

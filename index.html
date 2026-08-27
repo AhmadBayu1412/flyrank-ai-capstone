@@ -37,6 +37,12 @@
   <!-- Markdown Renderer for direct README viewing -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+  <!-- HTML Sanitizer for XSS protection -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js" integrity="sha512-5qWTdHFk2yZSAKDrvZQ3L5JZw9enZZSHEZ2eOp1XxLDek4DV8aTxAwZ5ML1vGE3FpME4rMBJ7C9X4B6E1jlrQ==" crossorigin="anonymous"></script>
+
+  <!-- Motion One - Declarative animation (vanilla JS equivalent of Framer Motion) -->
+  <script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.iife.min.js" integrity="sha512-GhzmkLFbZR4f6r0qWF8RnFqLOQk/xjnYL9Rjd1B5Lh5kW6vZ0qNaOqOqAWST0iFEZ3PPO3lZrOLzPdTgdL5G6Q==" crossorigin="anonymous"></script>
+
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -186,7 +192,7 @@
       <div class="page-view-stage" id="main-scroll-stage">
         
         <!-- Cover Banner Header -->
-        <section class="notion-cover-wrapper">
+        <section class="notion-cover-wrapper" aria-label="Cover Banner">
           <img src="./assets/images/cover-banner.svg" alt="Cover Banner" class="notion-cover-img" id="cover-image" />
           <div class="cover-actions">
             <button class="ghost-btn" id="btn-change-cover">🖼 Change cover</button>
@@ -870,8 +876,6 @@
               <h3>No projects match your search</h3>
               <p>Coba gunakan kata kunci lain seperti <code>AI</code>, <code>Next.js</code>, <code>GLSL</code>, atau <code>PostgreSQL</code>.</p>
               <button class="ghost-btn" onclick="resetFilters()">Reset Filter</button>
-            </div>
-
           </div>
 
         </div>
@@ -889,10 +893,10 @@
     <div class="notion-modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle">
       <button class="modal-close-btn" onclick="closeModal()" title="Close (Esc)" aria-label="Close project modal">✕</button>
       
-      <!-- Modal Banner Cover -->
-      <div class="modal-cover-wrap">
-        <img src="" alt="Modal Banner" id="modal-cover-img" />
-      </div>
+        <!-- Modal Banner Cover -->
+        <div class="modal-cover-wrap">
+          <img src="" alt="Modal Banner" id="modal-cover-img" loading="lazy" />
+        </div>
 
       <!-- Modal Content Body -->
       <div class="modal-body-content">
@@ -1297,6 +1301,7 @@
   <div class="notion-toast" id="notion-toast">Workspace URL copied to clipboard!</div>
 
   <!-- JavaScript -->
+  <script src="./motion.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>
